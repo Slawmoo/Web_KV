@@ -1,76 +1,61 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="front.css">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0/js/bootstrap.bundle.min.js"></script>
     <title>CV</title>
 </head>
-<head>
-    <style>
-    /* Define the style for the header and footer */
-    header, footer {
-      background-color: darkslateblue;
-      color: white;
-      text-align: center;
-      padding: 10px;
-    }
-    
-    /* Define the style for the navigation buttons */
-    nav {
-      display: flex;
-      justify-content: flex-end;
-      align-items: center;
-    }
-    
-    nav button {
-      background-color: darkslateblue;
-      color: white;
-      border: none;
-      margin: 5px;
-      padding: 10px;
-      cursor: pointer;
-    }
-    
-    /* Define the style for the body stripes */
-    .stripe {
-      height: 100px;
-    }
-    
-    .stripe1 {
-      background-color: darkgreen;
-    }
-    
-    .stripe2 {
-      background-color: lightgreen;
-    }
-    
-    .stripe3 {
-      background-color: black;
-    }
-    </style>
-    </head>
-    <body>
-    <!-- Create the header with a menu icon, a heading, and two buttons -->
-    <header>
-      <nav>
-        <span>☰</span>
-        <h1>My Journey</h1>
-        <button>SEND QUERY</button>
-        <button>FAQ</button>
-      </nav>
-    </header>
-    
-    <!-- Create the body with three horizontal stripes -->
-    <main>
-      <div class="stripe stripe1"></div>
-      <div class="stripe stripe2"></div>
-      <div class="stripe stripe3"></div>
-    </main>
-    
-    <!-- Create the footer with the same style as the header -->
-    <footer>
-      <p>© Marko Karavla 2023. All rights reserved.</p>
-    </footer>
-    </body>
-</html>
+<header>
+    <nav>
+        <!-- Create a navbar with a burger button -->
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <div class="container-fluid">
+                <!-- Create a button element with the class "navbar-toggler" and the data attributes "data-bs-toggle" and "data-bs-target" -->
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                    <!-- Add a span element with the class "navbar-toggler-icon" to create the burger icon -->
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <!-- Create a div element with the class "collapse navbar-collapse" and the id "navbarSupportedContent" -->
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <!-- Create an unordered list element with the class "navbar-nav me-auto mb-2 mb-lg-0" -->
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <!-- Create list items with the class "nav-item" and anchor elements with the class "nav-link" for each menu item -->
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="#">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">About</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Contact</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </nav>
+    <h1>My Journey</h1>
+    <button>SEND QUERY</button>
+    <button>FAQ</button>
+    </nav>
+</header>
 
+<body></body>
+</body>
+<main>
+    <div class="stripe stripe1"></div>
+    <div class="stripe stripe2"></div>
+    <div class="stripe stripe3"></div>
+</main>
+
+<footer>
+    <p>© Marko Karavla 2023. All rights reserved.</p>
+</footer>
+
+</html>

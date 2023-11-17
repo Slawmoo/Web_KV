@@ -1,0 +1,49 @@
+.menu-icon {
+    width: 50px;
+    height: 50px;
+    padding: 10px;
+    margin: 10px;
+    border: none;
+    cursor: pointer;
+    background: linear-gradient(to bottom, #333, #333 20%, transparent 20%, transparent 40%, #333 40%, #333 60%, transparent 60%, transparent 80%, #333 80%, #333);
+  }
+/* Define the style for the header and footer */
+header, footer {
+    background-color: darkslateblue;
+    color: white;
+    text-align: center;
+    padding: 10px;
+  }
+  
+  /* Define the style for the navigation buttons */
+  nav {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+  }
+  
+  nav button {
+    background-color: darkslateblue;
+    color: white;
+    border: none;
+    margin: 5px;
+    padding: 10px;
+    cursor: pointer;
+  }
+  
+  /* Define the style for the body stripes */
+  .stripe {
+    height: 100px;
+  }
+  
+  .stripe1 {
+    background-color: darkgreen;
+  }
+  
+  .stripe2 {
+    background-color: lightgreen;
+  }
+  
+  .stripe3 {
+    background-color: black;
+  }  
