@@ -1,0 +1,49 @@
+html{
+  background: #000;
+}
+/* Define the style for the header and footer */
+header {
+  background-color: #000000;
+  color: #FFE500;
+  text-align: center;
+}
+#naslov {
+  justify-content: center;
+}
+
+footer {
+  background-color: #1F0732;
+  color: #FFE500;
+  text-align: center;
+}
+
+/* Define the style for the navigation buttons */
+nav {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+nav button {
+  background-color: #1F0732;
+  color: #FFE500;
+  border: none;
+  cursor: pointer;
+}
+
+/* Define the style for the body stripes */
+.stripe {
+  height: 100px;
+}
+
+.stripe1 {
+  background-color: #B09916;
+}
+
+.stripe2 {
+  background-color: #008D00;
+}
+
+.stripe3 {
+  background-color: #000000;
+}
