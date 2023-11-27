@@ -3,132 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="home.css">
+    <script src="home.js"></script>
     <title>CV</title>
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: 'Arial', sans-serif;
-            background-color: #000000;
-            color: #FFFFFF;
-        }
-
-        header {
-            text-align: center;
-            padding: 50px 0;
-        }
-
-        h1 {
-            color: #FFE500;
-        }
-
-        #buttons {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-        }
-
-        button {
-            margin-left: 10px;
-            background-color: #B09916;
-            color: #000000;
-            border: none;
-            padding: 10px 20px;
-            cursor: pointer;
-            border-radius: 5px;
-        }
-
-        #button1 {
-            background-color: #FFE500;
-        }
-
-        #button2 {
-            background-color: #008D00;
-        }
-
-        /* Hidden sidebar styles */
-        #sidebar {
-            height: 100%;
-            width: 0;
-            position: fixed;
-            z-index: 1;
-            top: 0;
-            left: 0;
-            background-color: #1F0732;
-            overflow-x: hidden;
-            transition: width 0.3s ease-in-out;
-            padding-top: 60px;
-            border-radius: 10px;
-        }
-
-        #sidebar a {
-            padding: 8px 8px 8px 32px;
-            text-decoration: none;
-            font-size: 20px;
-            color: #FFE500;
-            display: block;
-            transition: 0.4s;
-        }
-
-        #sidebar a:hover {
-            color: #B09916;
-            opacity: 50%;
-        }
-
-        #menuIcon {
-            cursor: pointer;
-            font-size: 24px;
-            margin-left: 20px;
-        }
-
-        #gallery {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 20px;
-        }
-
-        #gallery img {
-            width: 80%; /* Set the width to 80% of the window */
-            max-width: 400px; /* Set a maximum width to avoid excessive stretching */
-            /*height: auto;  Allow the height to adjust to maintain aspect ratio */
-            margin-bottom: 10px;
-            border-radius: 5px;
-            transition: opacity 0.3s; /* Add a smooth transition effect */
-            cursor: pointer;
-        }
-        .cvImages:hover{
-            opacity: 0.7;
-        }
-        #resumeContent {
-            display: none;
-            max-width: 85%;
-            margin: 20px auto;
-            padding: 30px;
-            background-color: #1F0732;
-            color: #FFFFFF;
-            border-radius: 30%;
-        }
-    </style>
+    
 </head>
 <body>
         <!-- Add To Sidebar -->
 
     <div id="sidebar">
         <a href="#" >Home</a>
-        <a href="sendMessage.html">Send Message</a>
+        <a href="sendMsg.html">Send Message</a>
         <a href="signIn.html">Sign In</a>
         <a href="signOut.html">Sign Out</a>
-        <a href="faq.html">FAQ</a>
+        <a href="FAQ.html">FAQ</a>
         <a href="#" onclick="closeNav()">Close</a>
         <!-- Add additional links as needed -->
     </div>
 
     <header>
-        <span id="menuIcon" onclick="toggleNav()">&#9776; Menu</span>
         <h1>The one and only M. K.</h1>
     </header>
-
+    <div id="menuIcon">
+        <span onclick="toggleNav()">&#9776; Menu</span>
+    </div>
     <div id="buttons">
         <button id="button1">Send Message</button>
         <button id="button2">FAQ</button>
@@ -156,41 +54,5 @@
         <!-- Add more images as needed -->
     </div>
     
-    <script>
-        function toggleNav() {
-        const sidebar = document.getElementById("sidebar");
-        const sidebarWidth = sidebar.offsetWidth;
-        if (sidebarWidth === 0) {
-            sidebar.style.width = "250px";
-        } else {
-            sidebar.style.width = "0";
-        }
-    }
-
-    function closeNav() {
-        document.getElementById("sidebar").style.width = "0";
-    }
-
-    function showResumeContent(imageName, contentId) {
-        const resumeContent = document.getElementById(contentId);
-        const currentContent = resumeContent.innerHTML;
-
-        // If content is visible, hide it
-        if (resumeContent.style.display === 'block') {
-            resumeContent.style.display = 'none';
-        } else {
-            // Modify the content based on the clicked image
-            resumeContent.innerHTML = `<h2>${imageName}</h2><h3>THIS IS RESUME CONTENT</h3>`;
-            
-            // Show the content
-            resumeContent.style.display = 'block';
-
-            // Scroll to the newly opened content
-            if (currentContent !== '') {
-                window.scrollBy(0, resumeContent.offsetHeight + 20);
-            }
-        }
-    }
-    </script>
 </body>
 </html>
