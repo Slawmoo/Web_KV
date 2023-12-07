@@ -47,7 +47,7 @@ button {
 }
 
 #gallery img {
-  width: 90%;
+  width: 80%;
   height: 250px;
   /* Set the width to 80% of the window */
   /*max-width: 80%;*/

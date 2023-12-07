@@ -39,37 +39,53 @@ body {
     background-color: #008D00;
   }
   
-  #gallery {
+  #sendMessage {
+    width: 70%;
+    margin: 0 auto;
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
+  }
+  
+  form {
+    width: 80%;
+    color: #FFE500;
+    text-align: center;
+    justify-content: center;
+  }
+  
+  label {
+    display: block;
+    margin-top: 10px;
     padding: 20px;
   }
   
-  #gallery img {
-    width: 90%;
-    height: 250px;
-    /* Set the width to 80% of the window */
-    /*max-width: 80%;*/
-    /* Set a maximum width to avoid excessive stretching */
-    /*height: auto;  Allow the height to adjust to maintain aspect ratio */
-    margin-bottom: 10px;
-    border-radius: 5px;
-    transition: opacity 0.3s;
-    /* Add a smooth transition effect */
-    cursor: pointer;
+  input,textarea{
+    display: block;
+    width: 80%;
+    margin-bottom: 5px;
+    background: #535353;
+    margin-left: 9%;
+    font-weight: bold;
+    font-size: large;
+    color: #FFE500;
+    font-stretch: extra-expanded;
   }
   
-  .cvImages:hover {
-    opacity: 0.7;
+  #description{
+    margin-left: 9%;
+    resize: none;
   }
   
-  #resumeContent {
-    display: none;
-    max-width: 85%;
-    margin: 20px auto;
-    padding: 30px;
-    background-color: #1F0732;
-    color: #FFFFFF;
-    border-radius: 30%;
+  input[type="submit"] {
+    margin-top: 50px;
+    width: 40%;
+    margin-left: 29%;
+    background: #008D00;
+    border-radius: 12px;
+    height: 40px;
+  }
+  ::placeholder{
+    color: #FFE500;
   }

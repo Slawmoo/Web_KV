@@ -25,7 +25,7 @@ $sql = "INSERT INTO users (email, password, description, company) VALUES ('$emai
 
 if ($conn->query($sql) === TRUE) {
     $conn->close();
-    // Redirect the user to home.html
+    // Redirect the user to signIn.html
     header("Location: signIn.html");
     exit(); // Make sure to exit to prevent further script execution
 } else {
