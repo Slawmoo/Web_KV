@@ -39,8 +39,7 @@ button {
 }
 
 
-
-#singInForm {
+#signInForm {
   width: 60%;
   margin: 0 auto;
   display: flex;
@@ -62,32 +61,21 @@ label {
   padding: 20px;
 }
 
-input,textarea{
+input{
   display: block;
-  width: 80%;
+  width: 50%;
   margin-bottom: 5px;
   background: #535353;
-  margin-left: 9%;
-}
-#email{
-  width: 80%;
-  margin-left: 9%;
-}
-#description{
-  margin-left: -1%;
-  resize: none;
-}
-#company{
-  width: 80%;
-  margin-left: 8%;
-  resize: none;
+  min-width: 150px;
+  max-width: 250px;
 }
 
 input[type="submit"] {
-  margin-top: 25%;
-  width: 40%;
-  margin-left: 29%;
+  margin-top: 50px;
+  width: 30%;
   background: #008D00;
   border-radius: 12px;
-  height: 20px;
+  height: 40px;
+  max-width: 150px;
+  font-weight: bold;
 }

@@ -7,15 +7,13 @@
     <link rel="stylesheet" href="generalDecor.css">
     <script src="generalScripts.js"></script>
     <script src="signIn.js"></script>
-    <title>SignIn</title>
+    <title>Sign In</title>
     
 </head>
 <body>
         <!-- Add To Sidebar -->
-
     <div id="sidebar">
         <a href="home.html" >Home</a>
-        <a href="signUp.html">Sign Up</a>
         <a href="#">Sign In</a>
         <a href="FAQ.html">FAQ</a>
         <a href="#" onclick="closeNav()">Close Menu</a>
@@ -33,14 +31,13 @@
         <button id="button2">FAQ</button>
     </div>
 
-    <div id="singInForm">
-        <form>
+    <div id="singInFormDiv">
+        <form id="signInForm" action="process_signIn.php" onsubmit="submitForm(event)" method="post" >
             <label for="email">E-mail</label>
             <input type="email" id="email" name="email" required>
-            <label for="description">Short description</label>
-            <textarea id="description" name="description" rows="5" maxlength="200" required></textarea>            <label for="company">Company Name</label>
-            <input type="text" id="company" name="company" maxlength="100" required>
-            <input type="submit" value="Submit">
+            <label for="password">Password</label>
+            <input type="password" id="pass" name="password" required>
+            <input type="submit" value="SIGN IN">
           </form> 
     </div>
 </body>
