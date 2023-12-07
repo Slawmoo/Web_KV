@@ -3,19 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="signIn.css">
+    <link rel="stylesheet" href="signUp.css">
     <link rel="stylesheet" href="generalDecor.css">
     <script src="generalScripts.js"></script>
-    <script src="signIn.js"></script>
-    <title>SignIn</title>
+    <script src="signUp.js"></script>
+    <title>Sign Up</title>
     
 </head>
 <body>
         <!-- Add To Sidebar -->
-
     <div id="sidebar">
         <a href="home.html" >Home</a>
-        <a href="signUp.html">Sign Up</a>
         <a href="#">Sign In</a>
         <a href="FAQ.html">FAQ</a>
         <a href="#" onclick="closeNav()">Close Menu</a>
@@ -23,7 +21,7 @@
     </div>
 
     <header>
-        <h1>SIGN IN</h1>
+        <h1>REGISTER</h1>
     </header>
     <div id="menuIcon">
         <span onclick="toggleNav()">&#9776; Menu</span>
@@ -33,13 +31,16 @@
         <button id="button2">FAQ</button>
     </div>
 
-    <div id="singInForm">
-        <form>
+    <div id="singUpFormDiv">
+        <form id="signupForm" action="process_signUp.php" onsubmit="submitForm(event)" method="post" >
             <label for="email">E-mail</label>
             <input type="email" id="email" name="email" required>
+            <label for="password">Password</label>
+            <input type="password" id="pass" name="password" required>
             <label for="description">Short description</label>
-            <textarea id="description" name="description" rows="5" maxlength="200" required></textarea>            <label for="company">Company Name</label>
-            <input type="text" id="company" name="company" maxlength="100" required>
+            <textarea id="description" name="description" rows="5" maxlength="200" placeholder="Describe yourself or company" required></textarea>            
+            <label for="company">Company Name</label>
+            <input type="text" id="company" name="company" maxlength="100" placeholder="Name of Your company" required>
             <input type="submit" value="Submit">
           </form> 
     </div>

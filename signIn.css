@@ -10,11 +10,6 @@ header {
   padding-top: 50px;
 }
 
-#menuIcon {
-  padding-left: 70px;
-  color: #FFE500;
-}
-
 h1 {
   color: #FFE500;
 }
@@ -43,41 +38,7 @@ button {
   background-color: #008D00;
 }
 
-/* Hidden sidebar styles */
-#sidebar {
-  height: 100%;
-  width: 0;
-  position: fixed;
-  z-index: 1;
-  top: 0;
-  left: 0;
-  background-image: linear-gradient(#000000, #1F0732, #008D00, #B09916);
-  overflow-x: hidden;
-  transition: width 0.3s ease-in-out;
-  padding-top: 60px;
-  border-radius: 10px;
 
-}
-
-#sidebar a {
-  padding: 8px 8px 8px 32px;
-  text-decoration: none;
-  font-size: 20px;
-  color: #FFE500;
-  display: block;
-  transition: 0.4s;
-}
-
-#sidebar a:hover {
-  color: #B09916;
-  opacity: 50%;
-}
-
-#menuIcon {
-  cursor: pointer;
-  font-size: 24px;
-  margin-left: 20px;
-}
 
 #singInForm {
   width: 60%;
@@ -103,9 +64,10 @@ label {
 
 input,textarea{
   display: block;
-  width: 100%;
+  width: 80%;
   margin-bottom: 5px;
   background: #535353;
+  margin-left: 9%;
 }
 #email{
   width: 80%;
@@ -127,4 +89,5 @@ input[type="submit"] {
   margin-left: 29%;
   background: #008D00;
   border-radius: 12px;
+  height: 20px;
 }
