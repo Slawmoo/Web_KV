@@ -1,37 +1,34 @@
 <?php
-$servername = "localhost";
-$username = "root";
-$password = "";
+// Spajanje na bazu podataka
+$servername = "localhost"; // Ili IP adresa servera
+$username = "root"; // Korisničko ime baze
+$password = ""; // Lozinka baze (ostavi prazno ako nema lozinke)
 $dbname = "cv_data";
 
-// Create connection
+// Kreiraj konekciju
 $conn = new mysqli($servername, $username, $password, $dbname);
 
-// Check connection
+// Provjeri konekciju
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Retrieve form data
+// Uhvati podatke iz POST zahtjeva
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $email = $_POST["email"];
-    $password = $_POST["password"];
-    $description = $_POST["description"];
-    $company = $_POST["company"];
+    $email = $conn->real_escape_string($_POST['email']);
+    $password = password_hash($_POST['password'], PASSWORD_BCRYPT); // Hash lozinke radi sigurnosti
+    $description = $conn->real_escape_string($_POST['description']);
+    $company = $conn->real_escape_string($_POST['company']);
+
+    // Unos podataka u bazu
+    $sql = "INSERT INTO users (email, password, description, company, isAdmin) VALUES ('$email', '$password', '$description', '$company', 0)";
+
+    // Uspješno izvršeno - redirekcija na početnu stranicu
+    header("Location: home.html");
+    exit(); // Obavezno zaustavi daljnje izvršavanje skripte nakon redirekcije
+    
 }
 
-// Insert data into the database
-$sql = "INSERT INTO users (email, password, description, company) VALUES ('$email', '$password', '$description', '$company')";
-
-if ($conn->query($sql) === TRUE) {
-    $conn->close();
-    // Redirect the user to signIn.html
-    header("Location: signIn.html");
-    exit(); // Make sure to exit to prevent further script execution
-} else {
-    echo "Error: " . $sql . "<br>" . $conn->error;
-}
-
-// Close the database connection
+// Zatvori konekciju
 $conn->close();
 ?>
