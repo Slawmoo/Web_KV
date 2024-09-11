@@ -31,13 +31,12 @@ button {
   border-radius: 5px;
 }
 
-#button1 {
-  background-color: #FFE500;
-}
-
-#button2 {
-  background-color: #008D00;
-}
+#welcome-text {
+  float: right;
+  font-size: 23px;
+  color: #FFE500;
+  margin-right: 20px;
+}   
 
 #gallery {
   display: flex;
