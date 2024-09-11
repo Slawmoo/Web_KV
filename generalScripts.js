@@ -12,6 +12,13 @@ function closeNav() {
     document.getElementById("sidebar").style.width = "0";
 }
 
+function toggleDescription() {
+    const description = document.getElementById('userDescription');
+    description.classList.toggle('expanded');
+}
+
+
+
 function showResumeContent(imageName, contentId) {
     const resumeContent = document.getElementById(contentId);
     const currentContent = resumeContent.innerHTML;
