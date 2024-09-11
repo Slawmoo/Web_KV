@@ -1,6 +1,5 @@
 <?php
 session_start();
-
 $user_name = isset($_SESSION['user_name']) ? $_SESSION['user_name'] : 'Guest'; // Ako nema korisnika, prikazuje 'Guest'
 
 /*// Check if the user is logged in (session variables are set)

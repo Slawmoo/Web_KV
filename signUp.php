@@ -24,7 +24,7 @@ session_start(); // Pokretanje sesije za prikazivanje grešaka
 <body>
     <!-- Add To Sidebar -->
     <div id="sidebar">
-        <a href="home.html">Home</a>
+        <a href="home.php">Home</a>
         <a href="sendMsg.html">Send Message</a>
         <a href="signUp.php">Sign Up</a>
         <a href="signIn.html">Sign In</a>

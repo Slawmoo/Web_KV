@@ -7,43 +7,46 @@ $password = "";
 $dbname = "cv_data";
 
 try {
+    // Kreiraj konekciju
     $conn = new mysqli($servername, $username, $password, $dbname);
 
+    // Provjeri konekciju
     if ($conn->connect_error) {
         throw new Exception("Connection failed: " . $conn->connect_error);
     }
 
-    // Retrieve form data
+    // Obrada podataka iz forme
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        $email = $_POST["email"];
-        $password = $_POST["password"];
-
-        // Validate user credentials
-        $sql = "SELECT id, name, email, description, company FROM users WHERE email = '$email' AND password = '$password'";
+        $email = $conn->real_escape_string($_POST['email']);
+        $password = $_POST['password'];
+    
+        // Provjera postoji li korisnik u bazi
+        $sql = "SELECT * FROM users WHERE email = '$email'";
         $result = $conn->query($sql);
-
+    
         if ($result->num_rows > 0) {
-            // Authentication successful
-            $userData = $result->fetch_assoc();
-
-            // Store user data in the session
-            $_SESSION["user_id"] = $userData["id"];
-            $_SESSION["user_name"] = $userData["name"];
-            $_SESSION["user_email"] = $userData["email"];
-            $_SESSION["user_description"] = $userData["description"];
-            $_SESSION["user_company"] = $userData["company"];
-
-            //redirect
-            header("Location: sendMsg.html");
-            exit();
-    } else {
-            // Authentication failed
-            echo "Invalid email or password";
+            $row = $result->fetch_assoc();
+            
+            // Provjera lozinke (koristi password_verify jer su lozinke hashirane)
+            if (password_verify($password, $row['password'])){//$password == $row['password']) {
+                // Postavi korisničko ime u sesiju
+                $_SESSION['user_name'] = $row['user_name']; // Pretpostavljamo da stupac user_name postoji u bazi
+                
+                // Preusmjeri korisnika na početnu stranicu
+                header("Location: home.php");
+                exit();
+            } else {
+                // Ako lozinka nije ispravna
+                echo "Incorrect password!";
+            }
+        } else {
+            // Ako korisnik s danim e-mailom ne postoji
+            echo "User with this email does not exist!";
         }
-}
-
-// Close the database connection
-$conn->close();
+    
+        // Zatvori konekciju
+        $conn->close();
+    }
 
 } catch (Exception $e) {
     die("Error: " . $e->getMessage());
