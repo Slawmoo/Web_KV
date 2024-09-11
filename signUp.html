@@ -10,6 +10,7 @@
     <title>Sign Up</title>
     
 </head>
+
 <body>
         <!-- Add To Sidebar -->
     <div id="sidebar">
@@ -26,18 +27,15 @@
     <header>
         <h1>REGISTER</h1>
     </header>
+    
     <div id="menuIcon">
         <span onclick="toggleNav()">&#9776; Menu</span>
     </div>
-   <!--  <div id="buttons">
-        <button id="button1">HOME</button>
-        <button id="button2">FAQ</button>
-    </div>-->
 
     <div id="singUpFormDiv">
         <form id="signupForm" action="process_signUp.php" method="POST" onsubmit="return validateForm()">            <label for="name">Name</label>
             <input type="text" id="name" name="name" placeholder="Enter your name" maxlength="50" required>
-
+           
             <label for="email">E-mail</label>
             <input type="email" id="email" name="email" placeholder="Enter e-mail" required>
 
@@ -54,43 +52,4 @@
           </form> 
     </div>
 </body>
-
-
-    <script>
-    // Funkcija za validaciju forme
-    function validateForm() {
-        // Provjera jačine lozinke
-        const password = document.getElementById('pass').value;
-        const email = document.getElementById('email').value;
-        
-        const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W).{8,}$/;
-        
-        if (!passwordRegex.test(password)) {
-            alert('Password must be at least 8 characters long, contain an uppercase letter, a lowercase letter, a number, and a special character.');
-            return false;
-        }
-
-        // Provjera formata e-maila (HTML input type=email već osigurava osnovnu validaciju, ali možemo dodatno provjeriti)
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(email)) {
-            alert('Please enter a valid email address.');
-            return false;
-        }
-
-        return true; // Ako sve prođe, vraćamo true kako bi se forma poslala
-    }
-    </script>
-
-    <script>
-        // Provjerava je li status jednak 'success'
-        window.onload = function() {
-            if (getQueryParam('status') === 'success') {
-                alert("Profile successfully created!");
-            }
-        };
-    </script>
-
-
-</html>
-
 </html>
