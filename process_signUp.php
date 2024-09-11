@@ -23,12 +23,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Unos podataka u bazu
     $sql = "INSERT INTO users (email, password, description, company, isAdmin) VALUES ('$email', '$password', '$description', '$company', 0)";
 
-    // Uspješno izvršeno - redirekcija na početnu stranicu
-    header("Location: home.html");
-    exit(); // Obavezno zaustavi daljnje izvršavanje skripte nakon redirekcije
-    
+    if ($conn->query($sql) === TRUE) {
+        // Uspješno izvršeno - redirekcija s parametrom
+        header("Location: signIn.html?status=success");
+    } else {
+        echo "Error: " . $sql . "<br>" . $conn->error;
+    }
 }
-
 // Zatvori konekciju
 $conn->close();
 ?>

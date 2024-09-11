@@ -11,6 +11,20 @@
     <title>Sign In</title>
     
 </head>
+<script>
+    // Funkcija koja dobiva vrijednost parametra iz URL-a
+    function getQueryParam(param) {
+        let urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(param);
+    }
+
+    // Provjerava je li status jednak 'success'
+    window.onload = function() {
+        if (getQueryParam('status') === 'success') {
+            alert("Profile successfully created!");
+        }
+    };
+</script>
 <body>
     <!-- Add To Sidebar -->
     <div id="sidebar">
