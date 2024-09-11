@@ -17,6 +17,7 @@ if ($conn->connect_error) {
 
 // Uhvati podatke iz POST zahtjeva
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $user_name = $conn->real_escape_string($_POST['name']);
     $email = $conn->real_escape_string($_POST['email']);
     $password = $_POST['password'];
     $description = $conn->real_escape_string($_POST['description']);
@@ -41,7 +42,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Ako je e-mail jedinstven i lozinka valjana, hashiraj lozinku i unesi podatke
     $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
 
-    $sql = "INSERT INTO users (email, password, description, company, isAdmin) VALUES ('$email', '$hashedPassword', '$description', '$company', 0)";
+    $sql = "INSERT INTO users (user_name,email, password, description, company, isAdmin) VALUES ('$user_name','$email', '$hashedPassword', '$description', '$company', 0)";
 
     if ($conn->query($sql) === TRUE) {
         header("Location: signIn.html?status=success");
