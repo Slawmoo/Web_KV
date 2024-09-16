@@ -30,7 +30,7 @@ try {
             // Provjera lozinke (koristi password_verify jer su lozinke hashirane)
             if (password_verify($password, $row['password'])){//$password == $row['password']) {
                 // Postavi korisničko ime u sesiju
-
+                $_SESSION['userId'] = $row['id'];
                 $_SESSION['user_name'] = $row['user_name']; // Pretpostavljamo da stupac user_name postoji u bazi
                 $_SESSION['userEmail'] = $row['email'];
                 $_SESSION['userCompany'] = $row['company'];

@@ -21,14 +21,7 @@ session_start();?>
     <div id="menuIcon">
         <span onclick="toggleNav()">&#9776; Menu</span>
     </div>
-    <!-- <div id="buttons">
-        <button id="button1">Send Message</button>
-        <button id="button2">FAQ</button>
-        
-    </div>-->
-    <div id="userDataContainer">
-    
-    </div>
+
     <div id="sendMessage">
         <form id="sendMessageForm" action="process_sendMsg.php" method="post" >
             <label for="description">Email content:</label>
