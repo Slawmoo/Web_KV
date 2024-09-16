@@ -17,6 +17,7 @@ function toggleDescription() {
     description.classList.toggle('expanded');
 }
 
+
 function showResumeContent(imageName, contentId) {
     const resumeContent = document.getElementById(contentId);
     const currentContent = resumeContent.innerHTML;

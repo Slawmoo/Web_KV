@@ -12,6 +12,7 @@ $user_name = isset($_SESSION['user_name']) ? $_SESSION['user_name'] : 'Guest'; /
     <link rel="stylesheet" href="generalDecor.css">
     <script src="generalScripts.js"></script>
     <script src="home.js"></script>
+    <script src="generalScripts.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <title>HOME</title>
     <style>/* Stil za desno poravnat tekst u zaglavlju */

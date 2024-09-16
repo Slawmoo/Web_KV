@@ -30,7 +30,7 @@ session_start();?>
     
     </div>
     <div id="sendMessage">
-        <form id="sendMessageForm" action="sendMsg.php" method="post" >
+        <form id="sendMessageForm" action="process_sendMsg.php" method="post" >
             <label for="description">Email content:</label>
             <textarea id="description" name="description" rows="10" maxlength="200" placeholder="Enter message for owner" required></textarea>            
             <input type="submit" value="Send">

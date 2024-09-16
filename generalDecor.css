@@ -78,3 +78,54 @@
   display: inline;
 }/*
 */
+
+/*OVO JE CRUD dekor oblikovanje dolje*/
+#editFormContainer {
+  position: absolute;
+  bottom: 60px;
+  left: 10px;
+  width: calc(100% - 20px);
+  background-color: #1F0732;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+#editFormContainer form {
+  display: flex;
+  flex-direction: column;
+}
+
+#editFormContainer label {
+  margin-top: 10px;
+  color: #777272;
+}
+
+#editFormContainer input, #editFormContainer textarea {
+  margin-top: 5px;
+  padding: 8px;
+  border: none;
+  border-radius: 5px;
+}
+
+#editFormContainer button {
+  margin-top: 10px;
+  background-color: #B09916;
+  color: #000000;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+#editFormContainer button:hover {
+  background-color: #FFE500;
+}
+
+#editFormContainer button.cancel {
+  background-color: #D9534F;
+}
+
+#editFormContainer button.cancel:hover {
+  background-color: #C9302C;
+}

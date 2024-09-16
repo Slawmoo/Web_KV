@@ -31,14 +31,6 @@ button {
   border-radius: 5px;
 }
 
-#button1 {
-  background-color: #FFE500;
-}
-
-#button2 {
-  background-color: #008D00;
-}
-
 #resumeContent {
   display: none;
   max-width: 85%;
@@ -54,3 +46,5 @@ button {
   justify-content: center;
   padding-top: 10%;
 }
+
+
