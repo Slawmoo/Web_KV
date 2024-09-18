@@ -25,10 +25,12 @@ if (isset($_SESSION['user_name']) && isset($_SESSION['userEmail']) && isset($_SE
     <title>Edit Profile</title>
 </head>
 <body>
-
+<?php include 'sidebar.php'; ?>
 <h1>EDIT PROFILE</h1>
 
-<?php include 'sidebar.php'; ?>
+<div id="menuIcon">
+        <span onclick="toggleNav()">&#9776; Menu</span>
+    </div>
 
 <div id="editUserInfoDiv">
     <form id="editUserInfoForm" method="POST" action="processEditUser.php">
