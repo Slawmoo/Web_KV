@@ -28,13 +28,22 @@ try {
             $row = $result->fetch_assoc();
             
             // Provjera lozinke (koristi password_verify jer su lozinke hashirane)
-            if (password_verify($password, $row['password'])){//$password == $row['password']) {
+            if (password_verify($password, $row['password'])) {
                 // Postavi korisničko ime u sesiju
                 $_SESSION['userId'] = $row['id'];
                 $_SESSION['user_name'] = $row['user_name']; // Pretpostavljamo da stupac user_name postoji u bazi
                 $_SESSION['userEmail'] = $row['email'];
                 $_SESSION['userCompany'] = $row['company'];
                 $_SESSION['userDescription'] = $row['description']; // Ovdje je korisnički opis
+
+                // Dodaj log zapis za prijavu korisnika
+                $log_text = "User logged in: " . $row['user_name'] . " (" . $row['email'] . ")";
+                $log_sql = "INSERT INTO admin_logs (user_id, text_of_changes, created_at) VALUES (?, ?, NOW())";
+                if ($log_stmt = $conn->prepare($log_sql)) {
+                    $log_stmt->bind_param("is", $row['id'], $log_text);
+                    $log_stmt->execute();
+                    $log_stmt->close();
+                }
 
                 // Preusmjeri korisnika na početnu stranicu
                 header("Location: home.php");

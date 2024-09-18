@@ -19,10 +19,17 @@ if (isset($_SESSION['user_name']) && isset($_SESSION['userEmail']) && isset($_SE
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="editUserInfo.css">
+    <link rel="stylesheet" href="generalDecor.css">
+    <script src="generalScripts.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <title>Edit Profile</title>
 </head>
 <body>
+
 <h1>EDIT PROFILE</h1>
+
+<?php include 'sidebar.php'; ?>
+
 <div id="editUserInfoDiv">
     <form id="editUserInfoForm" method="POST" action="processEditUser.php">
         <label for="user_name">Name</label>

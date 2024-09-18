@@ -42,9 +42,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Ako je e-mail jedinstven i lozinka valjana, hashiraj lozinku i unesi podatke
     $hashedPassword = crypt($password, "2xw");
 
-    $sql = "INSERT INTO users (user_name,email, password, description, company, isAdmin) VALUES ('$user_name','$email', '$hashedPassword', '$description', '$company', 0)";
+    $sql = "INSERT INTO users (user_name, email, password, description, company, isAdmin) VALUES ('$user_name','$email', '$hashedPassword', '$description', '$company', 0)";
 
     if ($conn->query($sql) === TRUE) {
+        // Unos uspješne registracije u admin_logs
+        $log_text = "New user registered: $user_name ($email)";
+        $log_sql = "INSERT INTO admin_logs (user_id, text_of_changes, created_at) VALUES ((SELECT id FROM users WHERE email = '$email'), ?, NOW())";
+        
+        if ($log_stmt = $conn->prepare($log_sql)) {
+            $log_stmt->bind_param("s", $log_text);
+            $log_stmt->execute();
+            $log_stmt->close();
+        }
+
         header("Location: signIn.html?status=success");
         exit(); 
     } else {
