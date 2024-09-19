@@ -32,23 +32,75 @@ body {
     border-radius: 5px;
   }
   
-  #button1 {
-    background-color: #FFE500;
-  }
-  
-  #button2 {
-    background-color: #008D00;
-  }
-  
-  #editUserInfoForm {
-    width: 60%;
-    margin: 0 auto;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-  }
-  
+  /* Center form and its elements */
+#editUserInfoForm {
+  width: 60%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Style individual form elements */
+input, textarea {
+  display: block;
+  width: 50%;
+  margin-bottom: 5px;
+  background: #535353;
+  color: #fff;
+  min-width: 150px;
+  max-width: 250px;
+}
+
+/* Ensure form buttons are aligned properly */
+.button-group {
+  display: flex;
+  justify-content: flex-start; /* Align buttons to the left */
+  align-items: center; /* Align buttons vertically */
+  gap: 6px; /* Space between buttons */
+   
+}
+
+/* Ensure buttons are the same height and have proper vertical alignment */
+button, input[type="submit"] {
+  margin-top: 25px;
+  height: 50px;
+  border-radius: 12px;
+  font-weight: bold;
+  max-width: 150px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  vertical-align: middle; /* Align buttons on the same axis */
+}
+/* Ensure buttons are the same height and have proper vertical alignment */
+button{
+  margin-top: 20px;
+  height: 50px;
+  border-radius: 12px;
+  font-weight: bold;
+  max-width: 150px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  vertical-align: middle; /* Align buttons on the same axis */
+}
+/* Save button styling */
+.save-btn {
+  background-color: #008D00;
+  color: #FFE500;
+  border: none;
+  cursor: pointer;
+}
+
+/* Delete button styling */
+.delete-btn {
+  background-color: red;
+  color: #000000;
+  border: none;
+  cursor: pointer;
+}
+
   form {
     width: 80%;
     color: #FFE500;
@@ -75,14 +127,3 @@ body {
   textarea {
     height: 100px;
   }
-  
-  input[type="submit"] {
-    margin-top: 50px;
-    width: 30%;
-    background: #008D00;
-    border-radius: 12px;
-    height: 40px;
-    max-width: 150px;
-    font-weight: bold;
-  }
-  

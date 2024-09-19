@@ -14,7 +14,7 @@ session_start();?>
     
 </head>
 <script>
-    // Funkcija koja dobiva vrijednost parametra iz URL-a
+     
     function getQueryParam(param) {
         let urlParams = new URLSearchParams(window.location.search);
         return urlParams.get(param);

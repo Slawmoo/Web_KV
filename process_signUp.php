@@ -55,7 +55,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $log_stmt->close();
         }
 
-        header("Location: signIn.html?status=success");
+        header("Location: home.php?status=success");
         exit(); 
     } else {
         echo "Error: " . $sql . "<br>" . $conn->error;

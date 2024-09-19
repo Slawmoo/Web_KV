@@ -2,6 +2,9 @@
 session_start();
 $user_name = isset($_SESSION['user_name']) ? $_SESSION['user_name'] : 'Guest'; // Ako nema korisnika, prikazuje 'Guest'
 
+if (isset($_GET['message'])) {
+    echo "<p style='color: green; text-align: center;'>" . htmlspecialchars($_GET['message']) . "</p>";
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">

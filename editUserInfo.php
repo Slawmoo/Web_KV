@@ -32,8 +32,9 @@ if (isset($_SESSION['user_name']) && isset($_SESSION['userEmail']) && isset($_SE
         <span onclick="toggleNav()">&#9776; Menu</span>
     </div>
 
-<div id="editUserInfoDiv">
+    <div id="editUserInfoDiv">
     <form id="editUserInfoForm" method="POST" action="processEditUser.php">
+        <!-- Form fields for name, email, company, and description -->
         <label for="user_name">Name</label>
         <input type="text" id="user_name" name="user_name" value="<?php echo $user_name; ?>" required>
         
@@ -45,10 +46,23 @@ if (isset($_SESSION['user_name']) && isset($_SESSION['userEmail']) && isset($_SE
         
         <label for="userDescription">Description</label>
         <textarea id="userDescription" name="userDescription" required><?php echo $userDescription; ?></textarea>
-        
-        <input type="submit" value="SAVE CHANGES">
+
+        <!-- Wrap both buttons in the same button group -->
+        <div class="button-group">
+            <input type="submit" value="SAVE CHANGES" class="save-btn">
+            <button type="button" class="delete-btn" onclick="confirmDelete();">DELETE ACCAUNT</button>
+        </div>
     </form>
 </div>
 
 </body>
+<script>
+function confirmDelete() {
+    if (confirm('Are you sure you want to delete your account?')) {
+        // Redirect to the delete process or form submission
+        window.location.href = "process_DeleteUser.php"; // Replace with your actual delete script
+    }
+}
+</script>
+
 </html>
