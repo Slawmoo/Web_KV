@@ -12,7 +12,7 @@ if (isset($_SESSION['userId'])) {
     $user_id = $_SESSION['userId'];  // Dohvati detalje korisnika iz session-a
     $user_name = $_SESSION['user_name'];
 } else {
-    echo "<script>alert('You need to log in to send a message.'); window.location.href = 'login.php';</script>";
+    echo "<script>alert('You need to log in to send a message.'); window.location.href = 'signIn.php';</script>";
     exit;
 }
 

@@ -4,7 +4,6 @@
     <a href="signUp.php">Sign Up</a>
     <a href="signIn.php">Sign In</a>
     <a href="signOut.php">Sign Out</a>
-    <a href="FAQ.php">FAQ</a>
     <a href="#" onclick="closeNav()">Close Menu</a>
 
     <!-- User Info Section -->
