@@ -1,45 +1,53 @@
 <?php
 session_start();
 
-// Database credentials
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "cv_data";
+header('Content-Type: application/json');
 
 // Provjeri je li korisnik prijavljen
-if (isset($_SESSION['userId'])) {
-    $user_id = $_SESSION['userId'];  // Dohvati detalje korisnika iz session-a
-    $user_name = $_SESSION['user_name'];
-} else {
-    echo "<script>alert('You need to log in to send a message.'); window.location.href = 'signIn.php';</script>";
+if (!isset($_SESSION['userId'])) {
+    echo json_encode([
+        'success' => false,
+        'message' => 'You need to log in to send a message.'
+    ]);
     exit;
 }
 
-// Provjera je li forma poslana
+$user_id = $_SESSION['userId'];
+$user_name = $_SESSION['user_name'];
+
+// Provjera je li zahtjev POST
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Prikupljanje podataka iz forme
-    $message = $_POST['description'];
+    // Dobivanje podataka iz JSON-a
+    $data = json_decode(file_get_contents('php://input'), true);
+    $message = $data['description'];
+
+    // Database credentials
+    $servername = "localhost";
+    $username = "root";
+    $password = "";
+    $dbname = "cv_data";
 
     // Povezivanje na bazu podataka
     $conn = new mysqli($servername, $username, $password, $dbname);
 
     // Provjera povezivanja
     if ($conn->connect_error) {
-        echo "<script>alert('Connection failed: " . $conn->connect_error . "');</script>";
+        echo json_encode([
+            'success' => false,
+            'message' => 'Connection failed: ' . $conn->connect_error
+        ]);
         exit;
     }
 
-    // SQL upit za unos podataka u tablicu msg
+    // SQL upit za unos poruke u bazu
     $sql = "INSERT INTO msg (sent_by_userID, message) VALUES (?, ?)";
     
-    // Priprema SQL upita
     if ($stmt = $conn->prepare($sql)) {
         $stmt->bind_param("is", $user_id, $message);
 
-        // Izvršavanje SQL upita
+        // Provjera je li SQL upit uspješno izvršen
         if ($stmt->execute()) {
-            // Ako je poruka uspješno poslana, zabilježi akciju u admin_logs
+            // Zabilježi akciju u admin_logs
             $log_text = "User $user_name has sent a message to the admin.";
             $log_sql = "INSERT INTO admin_logs (user_id, text_of_changes, created_at) VALUES (?, ?, NOW())";
             
@@ -47,22 +55,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $log_stmt->bind_param("is", $user_id, $log_text);
                 $log_stmt->execute();
                 $log_stmt->close();
-            } else {
-                echo "<script>alert('Error logging the action: " . $conn->error . "');</script>";
             }
 
-            echo "<script>alert('Message sent successfully!'); window.location.href = 'sendMsg.php';</script>";
+            echo json_encode([
+                'success' => true,
+                'message' => 'Message sent successfully!'
+            ]);
         } else {
-            echo "<script>alert('Error: " . $stmt->error . "');</script>";
+            echo json_encode([
+                'success' => false,
+                'message' => 'Error: ' . $stmt->error
+            ]);
         }
 
-        // Zatvori pripremljeni upit
         $stmt->close();
     } else {
-        echo "<script>alert('Error preparing statement: " . $conn->error . "');</script>";
+        echo json_encode([
+            'success' => false,
+            'message' => 'Error preparing statement: ' . $conn->error
+        ]);
     }
 
-    // Zatvaranje konekcije
     $conn->close();
 }
 ?>
