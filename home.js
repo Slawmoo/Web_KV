@@ -1,16 +1,24 @@
-function showResumeContent(imageName, contentId) {
+function showResumeContent(title, contentId) {
     const resumeContent = document.getElementById(contentId);
     const currentContent = resumeContent.innerHTML;
 
-    // If content is visible, hide it
     if (resumeContent.style.display === 'block') {
         resumeContent.style.display = 'none';
     } else {
-        // Modify the content based on the clicked image
-        resumeContent.innerHTML = `<h2>${imageName}</h2><h3>THIS IS RESUME CONTENT</h3>`;
-
-        // Show the content
-        resumeContent.style.display = 'block';
+        // Request the content from the PHP backend
+        $.ajax({
+            url: 'process_homeContent.php',
+            type: 'GET',
+            data: { section_title: title },
+            success: function(data) {
+                resumeContent.innerHTML = `<h2>${title}</h2><p>${data}</p>`;
+                resumeContent.style.display = 'block';
+            },
+            error: function() {
+                resumeContent.innerHTML = `<p>Error loading content.</p>`;
+                resumeContent.style.display = 'block';
+            }
+        });
 
         // Scroll to the newly opened content
         if (currentContent !== '') {
