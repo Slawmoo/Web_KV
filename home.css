@@ -15,12 +15,6 @@ h1 {
   color: #FFE500;
 }
 
-#buttons {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-}
-
 button {
   margin-left: 10px;
   background-color: #B09916;
@@ -59,12 +53,13 @@ button {
   font-size: 24px;
   font-weight: bold;
   text-align: center;
-  transition: opacity 0.3s;
+  transition: background-color 0.3s, opacity 0.3s, height 0.5s ease; /* Dodan prijelaz za visinu */
   cursor: pointer;
 }
 
 .cvSection:hover {
   opacity: 0.8; /* Efekt na hover */
+  background-color: #370c4e; /* Tamnija ljubičasta na hover */
 }
 
 .sectionText {
@@ -81,5 +76,26 @@ button {
   padding: 30px;
   background-color: #1F0732;
   color: #FFFFFF;
-  border-radius: 5%;
+  border-radius: 10px;
+  overflow: hidden;
+  max-height: 0; /* Početno skriveno */
+  transition: max-height 0.5s ease-out, padding 0.5s ease-out; /* Animacija za prikaz sadržaja */
+}
+
+.cvSection.active .resumeContent {
+  display: block;
+  max-height: 500px; /* Dovoljno da prikaže sadržaj */
+  padding: 20px; /* Povećanje paddinga pri otvaranju */
+  animation: slideDown 0.5s ease-out forwards;
+}
+
+@keyframes slideDown {
+  0% {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

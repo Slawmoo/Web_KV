@@ -61,19 +61,16 @@ $conn->close();
     </div>
 
     <div id="CV_list">
-        <?php if (!empty($sections_titles)): ?>
-            <?php foreach ($sections_titles as $index => $sectionTitle): ?>
-                <div class="cvSection" onclick="showResumeContent('resumeContent<?php echo $index; ?>')">
-                    <div class="sectionText"><?php echo htmlspecialchars($sectionTitle); ?></div>
-                </div>
+        <?php foreach ($sections_titles as $index => $sectionTitle): ?>
+            <div class="cvSection" onclick="showResumeContent(<?php echo $index; ?>)">
+                <div class="sectionText"><?php echo htmlspecialchars($sectionTitle); ?></div>
                 <div id="resumeContent<?php echo $index; ?>" class="resumeContent">
-                    <h3>Content for <?php echo htmlspecialchars($sectionTitle); ?></h3>
+                    <h3><?php echo htmlspecialchars($sectionTitle); ?></h3>
                     <p><?php echo htmlspecialchars($sections_contents[$index]); ?></p>
                 </div>
-            <?php endforeach; ?>
-        <?php else: ?>
-            <p>No sections available.</p>
-        <?php endif; ?>
+            </div>
+        <?php endforeach; ?>
     </div>
+
 </body>
 </html>
