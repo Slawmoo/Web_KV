@@ -99,3 +99,14 @@ button {
     transform: translateY(0);
   }
 }
+.admin-buttons {
+  display: flex;
+  justify-content: space-around; /* Distribute buttons evenly */
+  margin-top: 10px; /* Add some space above the buttons */
+  margin-bottom: 25px;
+}
+
+.add-section-button {
+  text-align: center; /* Center the Add Section button */
+  margin-top: 20px; /* Add space above the button */
+}

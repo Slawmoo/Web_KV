@@ -34,7 +34,8 @@ try {
                 $_SESSION['user_name'] = $row['user_name'];  
                 $_SESSION['userEmail'] = $row['email'];
                 $_SESSION['userCompany'] = $row['company'];
-                $_SESSION['userDescription'] = $row['description']; 
+                $_SESSION['userDescription'] = $row['description'];
+                $_SESSION['isAdmin'] = $row['isAdmin'];
 
                 // Dodaj log zapis za prijavu korisnika
                 $log_text = "User logged in: " . $row['user_name'] . " (" . $row['email'] . ")";

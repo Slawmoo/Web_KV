@@ -1,6 +1,7 @@
 <?php
 session_start();
 $user_name = isset($_SESSION['user_name']) ? $_SESSION['user_name'] : 'Guest';
+$isAdmin = $_SESSION['isAdmin'] != 0; // Check if the user is an admin
 
 $servername = "localhost";
 $username = "root";
@@ -23,7 +24,6 @@ $sections_titles = [];
 $sections_contents = [];
 
 if ($result->num_rows > 0) {
-    // Fetch rows into $sections_titles and $sections_contents arrays
     while ($row = $result->fetch_assoc()) {
         $sections_titles[] = $row['section_title'];
         $sections_contents[] = $row['section_content'];
@@ -52,7 +52,7 @@ $conn->close();
     <?php include 'sidebar.php'; ?>
 
     <header>
-        <h1 id="mainTitle">Home and M. K.</h1>
+        <h1 id="mainTitle">Marko's Journey</h1>
         <span id="welcome-text">Welcome <?php echo htmlspecialchars($user_name); ?>!</span>
     </header>
 
@@ -68,7 +68,22 @@ $conn->close();
                     <p><?php echo htmlspecialchars($sections_contents[$index]); ?></p>
                 </div>
             </div>
+            
+            <!-- Admin buttons -->
+            <?php if ($isAdmin): ?>
+                    <div class="admin-buttons">
+                        <button>Edit Content</button>
+                        <button>Save Changes</button>
+                        <button>Cancel Edit</button>
+                    </div>
+                <?php endif; ?>
         <?php endforeach; ?>
+        
+        <?php if ($isAdmin): ?>
+            <div class="add-section-button">
+                <button>Add Section +</button>
+            </div>
+        <?php endif; ?>
     </div>
 
 </body>
