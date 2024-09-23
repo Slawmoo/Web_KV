@@ -16,16 +16,20 @@ if ($conn->connect_error) {
 }
 
 // Fetch CV sections
-$sections = [];
 $sql = "SELECT section_title, section_content FROM home_content";
 $result = $conn->query($sql);
 
+$sections_titles = [];
+$sections_contents = [];
+
 if ($result->num_rows > 0) {
+    // Fetch rows into $sections_titles and $sections_contents arrays
     while ($row = $result->fetch_assoc()) {
-        $sections[] = $row;  // Store each section as an associative array
+        $sections_titles[] = $row['section_title'];
+        $sections_contents[] = $row['section_content'];
     }
 } else {
-    echo "<p style='text-align: center;'>No sections found.</p>";
+    echo "No sections found";
 }
 
 $conn->close();
@@ -57,15 +61,19 @@ $conn->close();
     </div>
 
     <div id="CV_list">
-        <?php foreach ($sections as $index => $section): ?>
-            <div class="cvSection" onclick="showResumeContent('<?php echo htmlspecialchars($section['section_title']); ?>', 'resumeContent<?php echo $index; ?>')">
-                <div class="sectionText"><?php echo htmlspecialchars($section['section_title']); ?></div>
-            </div>
-            <div id="resumeContent<?php echo $index; ?>" class="resumeContent">
-                <h3>Content for <?php echo htmlspecialchars($section['section_title']); ?></h3>
-                <p><?php echo htmlspecialchars($section['section_content']); ?></p>
-            </div>
-        <?php endforeach; ?>
+        <?php if (!empty($sections_titles)): ?>
+            <?php foreach ($sections_titles as $index => $sectionTitle): ?>
+                <div class="cvSection" onclick="showResumeContent('resumeContent<?php echo $index; ?>')">
+                    <div class="sectionText"><?php echo htmlspecialchars($sectionTitle); ?></div>
+                </div>
+                <div id="resumeContent<?php echo $index; ?>" class="resumeContent">
+                    <h3>Content for <?php echo htmlspecialchars($sectionTitle); ?></h3>
+                    <p><?php echo htmlspecialchars($sections_contents[$index]); ?></p>
+                </div>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <p>No sections available.</p>
+        <?php endif; ?>
     </div>
 </body>
 </html>
