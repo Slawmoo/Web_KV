@@ -36,23 +36,11 @@ if (isset($_GET['message'])) {
 
     <div id="gallery">
         <!-- Image 1 -->
-        <img class="cvImages" src="placeholder.png" alt="Image 1" onclick="showResumeContent('placeholder.png', 'resumeContent1')">
+        <img class="cvImages" src="placeholder.png" onclick="showResumeContent('placeholder.png', 'resumeContent1')">
+        
         <div id="resumeContent1" class="resumeContent">
             <!-- Content for Image 1 -->
         </div>
-
-        <!-- Image 2 -->
-        <img class="cvImages" src="placeholder.png" alt="Image 2" onclick="showResumeContent('placeholder.png', 'resumeContent2')">
-        <div id="resumeContent2" class="resumeContent">
-            <!-- Content for Image 2 -->
-        </div>
-
-        <!-- Image 3 -->
-        <img class="cvImages" src="placeholder.png" alt="Image 3" onclick="showResumeContent('placeholder.png', 'resumeContent3')">
-        <div id="resumeContent3" class="resumeContent">
-            <!-- Content for Image 3 -->
-        </div>
-        <!-- Add more images as needed -->
     </div>
     
 </body>
