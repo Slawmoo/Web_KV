@@ -81,6 +81,7 @@ $conn->close();
             <!-- Editable fields (initially hidden) -->
             <div class="editFields" id="editFields<?php echo $section['id']; ?>" style="display:none;">
                 <input type="text" id="editTitle<?php echo $section['id']; ?>" value="<?php echo htmlspecialchars($section['section_title']); ?>" />
+                <br><br>
                 <textarea id="editContent<?php echo $section['id']; ?>"><?php echo htmlspecialchars($section['section_content']); ?></textarea>
             </div>
         <?php endif; ?>

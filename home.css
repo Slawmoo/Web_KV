@@ -110,3 +110,37 @@ button {
   text-align: center; /* Center the Add Section button */
   margin-top: 20px; /* Add space above the button */
 }
+
+/*EDIT BUTTONS*/
+.editFields {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center elements horizontally */
+  margin-bottom: 5px; /* Space below the entire edit section */
+  text-align: center;
+  border-radius: 5px;
+}
+
+.editFields input[type="text"] {
+  width: 50%; /* Make the title input take 50% of the screen width */
+  padding: 12px; /* Add padding inside the input */
+  background-color: #535353; /* Set background color */
+  color: #FFE500; /* Set text color */
+  text-align: center; /* Center the text inside the input */
+  border: none; /* Remove border */
+  margin-bottom: 20px; /* Space between input and textarea */
+  font-size: 18px; /* Increase font size */
+  border-radius: 5px;
+}
+
+.editFields textarea {
+  width: 80%; /* Make the textarea take 80% of the screen width */
+  height: 200px; /* Increase the height of the textarea */
+  padding: 14px; /* Add padding inside the textarea */
+  background-color: #535353; /* Set background color */
+  color: #FFE500; /* Set text color */
+  font-size: 16px; /* Increase font size */
+  margin-bottom: 20px; /* Space below the textarea */
+  border-radius: 5px;
+}
+
