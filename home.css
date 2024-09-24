@@ -170,3 +170,43 @@ button {
   height: 200px;
   resize: none;
 }
+@media only screen and (max-width: 768px) {
+  body {
+      font-size: 16px; /* Manji font za mobilne uređaje */
+  }
+
+  header {
+      padding-top: 20px; /* Manje razmakivanje na vrhu */
+  }
+
+  #welcome-text {
+      font-size: 18px; /* Manji tekst dobrodošlice */
+      margin-right: 10px; /* Manji razmak */
+  }
+
+  #CV_list {
+      padding: 10px; /* Manje paddinga */
+  }
+
+  .cvSection {
+      width: 90%; /* Širina panela za mobilne uređaje */
+      font-size: 20px; /* Manji font za mobilne uređaje */
+      padding: 15px; /* Manji padding */
+  }
+
+  .sectionText {
+      font-size: 20px; /* Manji font za naziv sekcije */
+  }
+
+  .editFields input[type="text"],
+  .editFields textarea,
+  #newSectionTitle,
+  #newSectionContent {
+      width: 90%; /* Širina za mobilne uređaje */
+  }
+  button {
+    padding: 15px 25px; /* Povećan padding za veća dugmad */
+    font-size: 18px; /* Veći font za lakše čitanje */
+}
+
+}

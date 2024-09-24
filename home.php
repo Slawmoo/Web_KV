@@ -46,6 +46,8 @@ $conn->close();
     <script src="generalScripts.js"></script>
     <script src="home.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBLJqZBP_SJe1R-8aLmhqu7PMZiKH_UB3w&callback=initMap" async defer></script>
+
     <title>HOME</title>
 </head>
 
@@ -104,3 +106,21 @@ $conn->close();
         </div>
     <?php endif; ?>
 </div>
+    <div id="map" style="height: 400px; width: 100%;"></div>
+    <script>
+        function initMap() {
+            const osijek = { lat: 45.5515, lng: 18.7055 };
+            const map = new google.maps.Map(document.getElementById("map"), {
+                zoom: 12,
+                center: osijek,
+            });
+
+            const marker = new google.maps.Marker({
+                position: osijek,
+                map: map,
+                title: "Osijek"
+            });
+        }
+    </script>
+</body>
+</html>
