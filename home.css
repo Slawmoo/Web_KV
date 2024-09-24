@@ -143,4 +143,30 @@ button {
   margin-bottom: 20px; /* Space below the textarea */
   border-radius: 5px;
 }
+/*ADD NEW SECTIONS*/
+#addSectionForm {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20px;
+}
 
+#newSectionTitle, #newSectionContent {
+  background-color: #535353;
+  color: #FFE500;
+  padding: 10px;
+  border: none;
+  font-size: 16px;
+  margin-bottom: 20px;
+}
+
+#newSectionTitle {
+  width: 50%;
+  text-align: center;
+}
+
+#newSectionContent {
+  width: 80%;
+  height: 200px;
+  resize: none;
+}

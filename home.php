@@ -90,7 +90,17 @@ $conn->close();
     <!-- Add Section button -->
     <?php if ($isAdmin): ?>
         <div class="add-section-button">
-            <button>Add Section +</button>
+            <button onclick="showAddSectionForm()">Add Section +</button>
+        </div>
+
+        <!-- Add Section Form (Initially hidden) -->
+        <div class="editFields" id="addSectionForm" style="display:none;">
+            <input type="text" id="newSectionTitle" placeholder="Enter new section title" />
+            <br><br>
+            <textarea id="newSectionContent" placeholder="Enter new section content"></textarea>
+            <br>
+            <button onclick="addNewSection()">Add New Section</button>
+            <button onclick="cancelAddSection()">Cancel</button>
         </div>
     <?php endif; ?>
 </div>

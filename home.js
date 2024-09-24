@@ -62,3 +62,57 @@ function saveContent(id) {
         }
     });
 }
+//NEW SECTION
+function showAddSectionForm() {
+    document.getElementById('addSectionForm').style.display = 'block';
+}
+
+function cancelAddSection() {
+    document.getElementById('addSectionForm').style.display = 'none';
+}
+
+function addNewSection() {
+    const newTitle = document.getElementById('newSectionTitle').value;
+    const newContent = document.getElementById('newSectionContent').value;
+
+    // Check if the fields are not empty
+    if (!newTitle || !newContent) {
+        alert("Please fill in both the title and content.");
+        return;
+    }
+
+    // AJAX request to send new section data to the server
+    $.ajax({
+        url: 'process_addSection.php',  // This PHP file will handle inserting the new section into the database
+        type: 'POST',
+        data: {
+            section_title: newTitle,
+            section_content: newContent
+        },
+        success: function(response) {
+            // Assuming the response contains the new section's ID
+            const newSectionId = response.new_id;
+
+            // Add the new section dynamically to the page
+            const newSectionHtml = `
+                <div class="cvSection" onclick="showResumeContent(${newSectionId})">
+                    <div class="sectionText">${newTitle}</div>
+                    <div id="resumeContent${newSectionId}" class="resumeContent">
+                        <p>${newContent}</p>
+                    </div>
+                </div>
+            `;
+            
+            // Append the new section to the CV list
+            document.getElementById('CV_list').innerHTML += newSectionHtml;
+
+            // Hide the add section form and reset the fields
+            document.getElementById('addSectionForm').style.display = 'none';
+            document.getElementById('newSectionTitle').value = '';
+            document.getElementById('newSectionContent').value = '';
+        },
+        error: function() {
+            alert('Error adding new section.');
+        }
+    });
+}
