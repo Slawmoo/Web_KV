@@ -60,66 +60,68 @@ $conn->close();
     <div id="menuIcon">
         <span onclick="toggleNav()">&#9776; Menu</span>
     </div>
+    <div id="CV_container">
+        <div id="CV_list">
+            <?php foreach ($sections as $section): ?>
+                <div class="cvSection" data-id="<?php echo $section['id']; ?>" onclick="showResumeContent(<?php echo $section['id']; ?>)">
+                    <div class="sectionText"><?php echo htmlspecialchars($section['section_title']); ?></div>
+                    <div id="resumeContent<?php echo $section['id']; ?>" class="resumeContent">
+                        <p><?php echo htmlspecialchars($section['section_content']); ?></p>
+                    </div>
+                </div>
 
-<div id="CV_list">
-    <?php foreach ($sections as $section): ?>
-        <div class="cvSection" onclick="showResumeContent(<?php echo $section['id']; ?>)">
-            <div class="sectionText"><?php echo htmlspecialchars($section['section_title']); ?></div>
-            <div id="resumeContent<?php echo $section['id']; ?>" class="resumeContent">
-                <p><?php echo htmlspecialchars($section['section_content']); ?></p>
-            </div>
+                <!-- Admin buttons -->
+                <div class="admin-buttons">
+                    <button id="editButton<?php echo $section['id']; ?>" onclick="editContent(<?php echo $section['id']; ?>)">Edit Content</button>
+                    <button style="display:none;" id="saveButton<?php echo $section['id']; ?>" onclick="saveContent(<?php echo $section['id']; ?>)">Save Changes</button>
+                    <button style="display:none;" id="cancelButton<?php echo $section['id']; ?>" onclick="cancelEdit(<?php echo $section['id']; ?>)">Cancel Edit</button>
+                </div>
+
+                <!-- Editable fields (initially hidden) -->
+                <div class="editFields" id="editFields<?php echo $section['id']; ?>" style="display:none;">
+                    <input type="text" id="editTitle<?php echo $section['id']; ?>" value="<?php echo htmlspecialchars($section['section_title']); ?>" />
+                    <br><br>
+                    <textarea id="editContent<?php echo $section['id']; ?>"><?php echo htmlspecialchars($section['section_content']); ?></textarea>
+                </div>
+            <?php endforeach; ?>
         </div>
 
-        <!-- Admin buttons -->
+        <!-- Add Section button -->
         <?php if ($isAdmin): ?>
-            <div class="admin-buttons">
-                <button onclick="editContent(<?php echo $section['id']; ?>)">Edit Content</button>
-                <button style="display:none;" id="saveButton<?php echo $section['id']; ?>" onclick="saveContent(<?php echo $section['id']; ?>)">Save Changes</button>
-                <button style="display:none;" id="cancelButton<?php echo $section['id']; ?>" onclick="cancelEdit(<?php echo $section['id']; ?>)">Cancel Edit</button>
+            <div class="add-section-button" id="add-section-button">
+                <button onclick="showAddSectionForm()">Add Section +</button>
             </div>
 
-            <!-- Editable fields (initially hidden) -->
-            <div class="editFields" id="editFields<?php echo $section['id']; ?>" style="display:none;">
-                <input type="text" id="editTitle<?php echo $section['id']; ?>" value="<?php echo htmlspecialchars($section['section_title']); ?>" />
+            <!-- Add Section Form (Initially hidden) -->
+            <div class="editFields" id="addSectionForm" style="display:none;">
+                <input type="text" id="newSectionTitle" placeholder="Enter new section title" />
                 <br><br>
-                <textarea id="editContent<?php echo $section['id']; ?>"><?php echo htmlspecialchars($section['section_content']); ?></textarea>
+                <textarea id="newSectionContent" placeholder="Enter new section content"></textarea>
+                <br>
+                <button onclick="addNewSection()">Add New Section</button>
+                <button onclick="cancelAddSection()">Cancel</button>
             </div>
         <?php endif; ?>
-    <?php endforeach; ?>
+    </div>
 
-    <!-- Add Section button -->
-    <?php if ($isAdmin): ?>
-        <div class="add-section-button">
-            <button onclick="showAddSectionForm()">Add Section +</button>
-        </div>
+<div id="map" class="google-map"></div>
 
-        <!-- Add Section Form (Initially hidden) -->
-        <div class="editFields" id="addSectionForm" style="display:none;">
-            <input type="text" id="newSectionTitle" placeholder="Enter new section title" />
-            <br><br>
-            <textarea id="newSectionContent" placeholder="Enter new section content"></textarea>
-            <br>
-            <button onclick="addNewSection()">Add New Section</button>
-            <button onclick="cancelAddSection()">Cancel</button>
-        </div>
-    <?php endif; ?>
-</div>
-    <div id="map" style="height: 400px; width: 100%;"></div>
-    <script>
-        function initMap() {
-            const osijek = { lat: 45.5515, lng: 18.7055 };
-            const map = new google.maps.Map(document.getElementById("map"), {
-                zoom: 12,
-                center: osijek,
-            });
+<script>
+    function initMap() {
+        const osijek = { lat: 45.5515, lng: 18.7055 };
+        const map = new google.maps.Map(document.getElementById("map"), {
+            zoom: 12,
+            center: osijek,
+        });
 
-            const marker = new google.maps.Marker({
-                position: osijek,
-                map: map,
-                title: "Osijek"
-            });
-        }
-    </script>
+        const marker = new google.maps.Marker({
+            position: osijek,
+            map: map,
+            title: "Osijek"
+        });
+    }
+</script>
+
 </body>
 
 <script>
@@ -152,13 +154,21 @@ function editContent(index) {
     document.getElementById('editFields' + index).style.display = 'block';
     document.getElementById('saveButton' + index).style.display = 'inline-block';
     document.getElementById('cancelButton' + index).style.display = 'inline-block';
+
+    // Hide the edit button
+    document.getElementById('editButton' + index).style.display = 'none';
 }
+
 function cancelEdit(index) {
     // Hide the edit fields and buttons
     document.getElementById('editFields' + index).style.display = 'none';
     document.getElementById('saveButton' + index).style.display = 'none';
     document.getElementById('cancelButton' + index).style.display = 'none';
+
+    // Show the edit button
+    document.getElementById('editButton' + index).style.display = 'inline-block';
 }
+
 function saveContent(id) {
     const title = document.getElementById('editTitle' + id).value;
     const content = document.getElementById('editContent' + id).value;
@@ -172,21 +182,31 @@ function saveContent(id) {
             section_title: title,
             section_content: content
         },
+        dataType: 'json',
         success: function(response) {
-            // Hide the edit fields and buttons
-            document.getElementById('editFields' + id).style.display = 'none';
-            document.getElementById('saveButton' + id).style.display = 'none';
-            document.getElementById('cancelButton' + id).style.display = 'none';
+            if (response.success) {
+                // Hide the edit fields and buttons
+                document.getElementById('editFields' + id).style.display = 'none';
+                document.getElementById('saveButton' + id).style.display = 'none';
+                document.getElementById('cancelButton' + id).style.display = 'none';
 
-            // Optionally, update the displayed section title and content
-            document.querySelectorAll('.cvSection .sectionText')[id].textContent = title;
-            document.getElementById('resumeContent' + id).querySelector('p').textContent = content;
+                // Show the edit button
+                document.getElementById('editButton' + id).style.display = 'inline-block';
+
+                // Update the displayed section title and content dynamically
+                document.querySelector('.cvSection[data-id="' + id + '"] .sectionText').textContent = title;
+                document.getElementById('resumeContent' + id).querySelector('p').textContent = content;
+            } else {
+                alert('Error updating content: ' + response.message);
+            }
         },
         error: function() {
             alert('Error updating content.');
         }
     });
 }
+
+
 //NEW SECTION
 function showAddSectionForm() {
     document.getElementById('addSectionForm').style.display = 'block';
@@ -245,7 +265,38 @@ function addNewSection() {
 </script>
 
 <style>
-    body {
+.google-map {
+    height: 400px;
+    width: 75%;
+    margin: 20px auto; /* Centers the map and adds top and bottom padding */
+    padding-bottom: 20px; /* Adds padding to the bottom of the page */
+    box-sizing: border-box; /* Ensures padding is included in element's width and height */
+}
+
+
+#CV_container {
+    display: flex;
+    flex-direction: column;
+}
+
+#CV_list {
+    display: flex;
+    flex-direction: column;
+}
+
+.cvSection {
+    margin-bottom: 20px; /* Add some space between sections */
+}
+
+.add-section-button {
+    margin-top: 20px; /* Add some space above the button */
+}
+
+.editFields {
+    margin-top: 20px; /* Add some space above the form */
+}
+
+body {
   margin: 0;
   padding: 0;
   font-family: 'Arial', sans-serif;
