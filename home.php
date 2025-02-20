@@ -1,7 +1,8 @@
 <?php
 session_start();
 $user_name = isset($_SESSION['user_name']) ? $_SESSION['user_name'] : 'Guest';
-$isAdmin = $_SESSION['isAdmin'] != 0; // Fetch isAdmin from session
+$isAdmin = false;
+$isAdmin = $_SESSION['isAdmin'] != false; // Fetch isAdmin from session
 
 // Povezivanje s bazom podataka
 $servername = "localhost";
