@@ -40,7 +40,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     // Ako je e-mail jedinstven i lozinka valjana, hashiraj lozinku i unesi podatke
-    $hashedPassword = crypt($password, "2xw");
+    $hashedPassword = $password;// crypt($password, "2xw");
 
     $sql = "INSERT INTO users (user_name, email, password, description, company, isAdmin) VALUES ('$user_name','$email', '$hashedPassword', '$description', '$company', 0)";
 
