@@ -60,6 +60,21 @@ $conn->close();
     </div>
     <div id="CV_container">
         <div id="CV_list">
+            <?php
+            // Povezivanje s bazom podataka
+            $servername = "localhost";
+            $username = "root";
+            $password = "";
+            $dbname = "cv_data";
+
+            // Kreiranje veze
+            $conn = new mysqli($servername, $username, $password, $dbname);
+
+            // Provjera veze
+            if ($conn->connect_error) {
+                die("Connection failed: " . $conn->connect_error);
+            }?>
+
             <?php foreach ($sections as $section): ?>
                 <div class="cvSection" data-id="<?php echo $section['id']; ?>" onclick="showResumeContent(<?php echo $section['id']; ?>)">
                     <div class="sectionText"><?php echo htmlspecialchars($section['section_title']); ?></div>
@@ -89,27 +104,19 @@ $conn->close();
                     <?php
                     // Fetch comments for the current section
                     $section_id = $section['id'];
-                    // Povezivanje s bazom podataka
-            $servername = "localhost";
-            $username = "root";
-            $password = "";
-            $dbname = "cv_data";
+                    
+                    $comments = $conn->query("SELECT section_comments.*, users.user_name 
+                                          FROM section_comments 
+                                          JOIN users ON section_comments.user_id = users.id 
+                                          WHERE section_id = $section_id 
+                                          ORDER BY created_at DESC");
 
-            // Kreiranje veze
-            $conn = new mysqli($servername, $username, $password, $dbname);
-
-            // Provjera veze
-            if ($conn->connect_error) {
-                die("Connection failed: " . $conn->connect_error);
-            }
-                    $comments = $conn->query("SELECT * FROM section_comments WHERE section_id = $section_id ORDER BY created_at DESC");
-
-                    while ($comment = $comments->fetch_assoc()): ?>
-                        <div class="comment">
-                            <p><?php echo htmlspecialchars($comment['comment_text']); ?></p>
-                            <small>Posted on: <?php echo $comment['created_at']; ?></small>
-                        </div>
-                    <?php endwhile; ?>
+                while ($comment = $comments->fetch_assoc()): ?>
+                    <div class="comment">
+                        <p><?php echo htmlspecialchars($comment['comment_text']); ?></p>
+                        <small><?php echo htmlspecialchars($comment['user_name']); ?> posted on: <?php echo $comment['created_at']; ?></small>
+                    </div>
+                <?php endwhile; ?>
                 </div>
 
                 <!-- Comment form -->
@@ -164,9 +171,12 @@ $conn->close();
 </body>
 
 <script>
-    function submitComment(sectionId) {
+  
+function submitComment(sectionId) {
     const commentText = document.getElementById(`commentText${sectionId}`).value;
-    
+    // Clear the comment box after submitting
+    document.getElementById(`commentText${sectionId}`).value = '';
+
     if (commentText.trim() === '') {
         alert('Comment cannot be empty!');
         return;
@@ -184,12 +194,13 @@ $conn->close();
     })
     .then(response => response.json())
     .then(data => {
+        console.log('Response data:', data);
         if (data.success) {
             // Add new comment to the comments section
             const commentsDiv = document.querySelector(`[data-id='${sectionId}'] .comments`);
             const newComment = document.createElement('div');
             newComment.className = 'comment';
-            newComment.innerHTML = `<p>${data.comment_text}</p><small>Posted on: ${data.created_at}</small>`;
+            newComment.innerHTML = `<p>${data.comment_text}</p><small>posted on: ${data.created_at}</small>`;
             commentsDiv.insertBefore(newComment, commentsDiv.firstChild);
 
             // Clear the comment box after submitting
@@ -198,11 +209,13 @@ $conn->close();
             alert(data.message);
         }
     })
-    .catch(error => console.error('Error:', error));
+    .catch(error => {
+        console.error('Error:', error);
+    });
 }
 
 
-    function showResumeContent(id) {
+function showResumeContent(id) {
     const allSections = document.querySelectorAll('.cvSection');
 
     allSections.forEach((section) => {

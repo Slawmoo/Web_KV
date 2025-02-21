@@ -8,14 +8,12 @@ $password = "";
 $dbname = "cv_data";
 
 // Set up error handling to not output HTML
-ini_set('display_errors', 0);
+ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
 try {
     // Create connection
     $conn = new mysqli($servername, $username, $password, $dbname);
-
-    // Check connection
     if ($conn->connect_error) {
         throw new Exception("Connection failed: " . $conn->connect_error);
     }
@@ -49,5 +47,6 @@ try {
     $conn->close();
 } catch (Exception $e) {
     echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+    error_log('Error: ' . $e->getMessage());
 }
 ?>
