@@ -2,7 +2,7 @@
 session_start();
 $user_name = isset($_SESSION['user_name']) ? $_SESSION['user_name'] : 'Guest';
 // Fix the isAdmin check to use proper isset()
-$isAdmin = isset($_SESSION['isAdmin']) ? $_SESSION['isAdmin'] != 0 : false;
+$isAdmin = isset($_SESSION['isAdmin']) ? $_SESSION['isAdmin'] != 0 : 0;
 
 // Povezivanje s bazom podataka
 $servername = "localhost";
@@ -42,22 +42,19 @@ $conn->close();
     <link rel="stylesheet" href="generalDecor.css">
     <script src="generalScripts.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBLJqZBP_SJe1R-8aLmhqu7PMZiKH_UB3w&callback=initMap" async defer></script>
+    <!--<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBLJqZBP_SJe1R-8aLmhqu7PMZiKH_UB3w&callback=initMap" async defer></script>-->
 
     <title>HOME</title>
 </head>
 
-<body>
     <?php include 'sidebar.php'; ?>
 
+    <div id="headerWrapper">
     <header>
         <h1 id="mainTitle">Marko's Journey</h1>
-        <span id="welcome-text">Welcome <?php echo htmlspecialchars($user_name); ?>!</span>
+        <h2 id="welcome-text">Welcome <?php echo htmlspecialchars($user_name); ?> !</h2>
+        <h2 id="menuIcon" onclick="toggleNav()">&#9776;</h2>
     </header>
-
-    <div id="menuIcon">
-        <span onclick="toggleNav()">&#9776; Menu</span>
-    </div>
     <div id="CV_container">
         <div id="CV_list">
             <?php
@@ -83,21 +80,21 @@ $conn->close();
     
                     </div>
                 </div>
+                <?php if ($isAdmin): ?>
+                    <!-- Admin buttons -->
+                    <div class="admin-buttons">
+                        <button id="editButton<?php echo $section['id']; ?>" onclick="editContent(<?php echo $section['id']; ?>)">Edit Content</button>
+                        <button style="display:none;" id="saveButton<?php echo $section['id']; ?>" onclick="saveContent(<?php echo $section['id']; ?>)">Save Changes</button>
+                        <button style="display:none;" id="cancelButton<?php echo $section['id']; ?>" onclick="cancelEdit(<?php echo $section['id']; ?>)">Cancel Edit</button>
+                    </div>
 
-                <!-- Admin buttons -->
-                <div class="admin-buttons">
-                    <button id="editButton<?php echo $section['id']; ?>" onclick="editContent(<?php echo $section['id']; ?>)">Edit Content</button>
-                    <button style="display:none;" id="saveButton<?php echo $section['id']; ?>" onclick="saveContent(<?php echo $section['id']; ?>)">Save Changes</button>
-                    <button style="display:none;" id="cancelButton<?php echo $section['id']; ?>" onclick="cancelEdit(<?php echo $section['id']; ?>)">Cancel Edit</button>
-                </div>
-
-                <!-- Editable fields (initially hidden) -->
-                <div class="editFields" id="editFields<?php echo $section['id']; ?>" style="display:none;">
-                    <input type="text" id="editTitle<?php echo $section['id']; ?>" value="<?php echo htmlspecialchars($section['section_title']); ?>" />
-                    <br><br>
-                    <textarea id="editContent<?php echo $section['id']; ?>"><?php echo htmlspecialchars($section['section_content']); ?></textarea>
-                </div>
-
+                    <!-- Editable fields (initially hidden) -->
+                    <div class="editFields" id="editFields<?php echo $section['id']; ?>" style="display:none;">
+                        <input type="text" id="editTitle<?php echo $section['id']; ?>" value="<?php echo htmlspecialchars($section['section_title']); ?>" />
+                        <br><br>
+                        <textarea id="editContent<?php echo $section['id']; ?>"><?php echo htmlspecialchars($section['section_content']); ?></textarea>
+                    </div>
+                <?php endif; ?>
 
                 <!-- Display existing comments -->
                 <div class="comments">
@@ -152,8 +149,11 @@ $conn->close();
 
 <div id="map" class="google-map"></div>
 
+
+
+
 <script>
-    function initMap() {
+/*function initMap() {
         const osijek = { lat: 45.5515, lng: 18.7055 };
         const map = new google.maps.Map(document.getElementById("map"), {
             zoom: 12,
@@ -166,12 +166,7 @@ $conn->close();
             title: "Osijek"
         });
     }
-</script>
-
-</body>
-
-<script>
-  
+*/
 function submitComment(sectionId) {
     const commentText = document.getElementById(`commentText${sectionId}`).value;
     // Clear the comment box after submitting
@@ -363,7 +358,9 @@ function addNewSection() {
     word-wrap: break-word; /* Break words when necessary */
     overflow: hidden; /* Hide overflowing content */
     text-overflow: ellipsis; /* Indicate overflow with ellipsis */
-    width: 480px; /* You can set this to whatever width you prefer */
+     /*width: 480px; You can set this to whatever width you prefer */
+    max-width: 500px; /* max width for larger screens */
+    min-width: 80px; /* min width for smaller screens */
     /*boje iz drugog filea*/
     background: #535353;
     border: 1px solid #666;
@@ -375,18 +372,23 @@ function addNewSection() {
     max-height: 8em; /* Limit height to 5 lines of text */
     overflow-y: auto; /* Add vertical scroll if content overflows */
     color: #FFE500;
+    max-width: fit-content;
 }
 /* Style for comment submit buttons */
 .comment-form{
     margin-bottom: 30px;
+    display: flex;
+    justify-content: center;
 }
 .comment-form button {
   height: 46px; /* same height as textboxes */
   max-width: 200px; /* max width for larger screens */
-  width: 80px; /* min width for smaller screens */
-  vertical-align: top; /* align buttons vertically with textboxes */
-  margin-left: 10px; /* keep the margin for spacing */
+  min-width: 70px;
+ /* align buttons vertically with textboxes */
+/*margin-left: 10px; keep the margin for spacing */
+    
   margin-top: 10px;
+  padding-bottom: 6px;
   background: #008D00;
 }
 
@@ -394,7 +396,7 @@ function addNewSection() {
 .comment-form textarea {
     width: 400px;
     max-width: 500px; /* max width for larger screens */
-    min-width: 50px; /* min width for smaller screens */
+    min-width: 60px; /* min width for smaller screens */
     resize: none;
     height: 40px; /* match the height of the buttons */
     margin-top: 10px;
@@ -408,25 +410,6 @@ function addNewSection() {
     font-size: large;
     font-stretch: extra-expanded;
 }
-
-@media (max-width: 768px) {
-    .comment-form textarea {
-        width: 150px;
-        resize: none;
-    height: 40px; /* match the height of the buttons */
-    margin-top: 10px;
-    /*boje iz drugog filea*/
-    background: #535353;
-    border: 1px solid #666;
-    border-radius: 1px;
-    color: #FFE500;
-    /*stil za placeholder*/
-    font-weight: bold;
-    font-size: large;
-    font-stretch: extra-expanded;
-    }
-}
-
 
 .google-map {
     height: 400px;
@@ -462,15 +445,13 @@ function addNewSection() {
 body {
   margin: 0;
   padding: 0;
+  width: 100%;
   font-family: 'Arial', sans-serif;
   background-color: #000000;
   color: #FFFFFF;
 }
 
-header {
-  text-align: center;
-  padding-top: 50px;
-}
+
 
 h1 {
   color: #FFE500;
@@ -487,11 +468,11 @@ button {
 }
 
 #welcome-text {
-  float: right;
   font-size: 23px;
   color: #FFE500;
-  margin-right: 20px;
+  /*margin-right: 20px;*/
 }
+
 
 #CV_list {
   display: flex;
@@ -503,6 +484,7 @@ button {
 .cvSection {
   width: 80%; /* Širina panela */
   height: auto; /* Automatska visina prema sadržaju */
+  max-height: fit-content; /* Visina prema sadržaju */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -633,43 +615,67 @@ button {
 }
 @media only screen and (max-width: 768px) {
   body {
-      font-size: 16px; /* Manji font za mobilne uređaje */
+      font-size: 16px; 
   }
 
   header {
-      padding-top: 20px; /* Manje razmakivanje na vrhu */
+      justify-content: center;
   }
 
   #welcome-text {
-      font-size: 18px; /* Manji tekst dobrodošlice */
-      margin-right: 10px; /* Manji razmak */
+      font-size: 18px; 
+       
+      align-items: center;
   }
 
   #CV_list {
-      padding: 10px; /* Manje paddinga */
+      padding: 10px; 
   }
 
   .cvSection {
-      width: 90%; /* Širina panela za mobilne uređaje */
-      font-size: 20px; /* Manji font za mobilne uređaje */
-      padding: 15px; /* Manji padding */
+      width: 90%; 
+      font-size: 20px; 
+      padding: 15px; 
   }
 
   .sectionText {
-      font-size: 20px; /* Manji font za naziv sekcije */
-  }
+      font-size: 20px; 
 
   .editFields input[type="text"],
   .editFields textarea,
   #newSectionTitle,
   #newSectionContent {
-      width: 90%; /* Širina za mobilne uređaje */
+      width: 90%; 
   }
   button {
-    padding: 15px 25px; /* Povećan padding za veća dugmad */
-    font-size: 18px; /* Veći font za lakše čitanje */
+    font-size: 15px; 
+}   
 }
-
+}
+@media screen and (max-width: 768px) {
+    .comment-form textarea {
+        width: 250px;
+        resize: none;
+    height: 40px; 
+    margin-top: 10px;
+    
+    background: #535353;
+    border: 1px solid #666;
+    border-radius: 5px;
+    color: #FFE500;
+    
+    font-weight: bold;
+    font-size: large;
+    font-stretch: extra-expanded;
+    }
+}
+#headerWrapper {
+    align-items: center;
+    top: 50%;
+    left: 50%;
+    text-align: center;
+    justify-content: center;
+    max-width: 150%; /* Adjust as needed */
 }
 </style>
 

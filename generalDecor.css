@@ -36,9 +36,9 @@
   font-size: 24px;
   margin-left: 20px;
   color: #FFE500;
-  padding-left: 70px;
 }
 
+/* User info */
 #userInfo {
   width: 100%;
   padding: 10px;
@@ -55,7 +55,7 @@
   margin-bottom: 5px;
 }
 
- 
+/* User description */
 #userDescription {
   cursor: pointer;
   overflow: hidden;
@@ -76,10 +76,9 @@
 
 #userDescription #shortDescription {
   display: inline;
-}/*
-*/
+}
 
-/*OVO JE CRUD dekor oblikovanje dolje*/
+/* CRUD form styling */
 #editFormContainer {
   position: absolute;
   bottom: 60px;
@@ -129,3 +128,54 @@
 #editFormContainer button.cancel:hover {
   background-color: #C9302C;
 }
+
+/* General styles for larger screens (Desktop) */
+body {
+  font-family: Arial, sans-serif;
+  padding: 20px;
+}
+
+#CV_container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
+
+.cvSection {
+  flex: 1 1 300px;
+  margin: 10px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+/* Media query for mobile screens
+@media (max-width: 768px) {
+  #menuIcon {
+      margin: 0 auto; 
+      padding-left: 0; 
+      text-align: center; 
+  }
+
+  #menuIcon {
+      display: inline; 
+      font-size: 24px; 
+  }
+}
+
+
+@media (max-width: 768px) {
+  #CV_container {
+    flex-direction: column;
+    padding: 10px;
+  }
+
+  header {
+    text-align: center;
+  }
+
+  .cvSection {
+    flex: 1 1 100%;
+    margin: 5px 0;
+  }
+}
+*/
