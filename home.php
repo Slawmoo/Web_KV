@@ -28,11 +28,9 @@ if ($result->num_rows > 0) {
     while ($row = $result->fetch_assoc()) {
         $sections[] = $row; // Store each section as an array
     }
-} else {
-    echo "No sections found";
 }
 
-// Zatvaranje veze
+// Zatvaranje veze tek kad se commentari učitaju
 $conn->close();
 ?>
 
@@ -67,6 +65,7 @@ $conn->close();
                     <div class="sectionText"><?php echo htmlspecialchars($section['section_title']); ?></div>
                     <div id="resumeContent<?php echo $section['id']; ?>" class="resumeContent">
                         <p><?php echo htmlspecialchars($section['section_content']); ?></p>
+    
                     </div>
                 </div>
 
@@ -83,8 +82,48 @@ $conn->close();
                     <br><br>
                     <textarea id="editContent<?php echo $section['id']; ?>"><?php echo htmlspecialchars($section['section_content']); ?></textarea>
                 </div>
-            <?php endforeach; ?>
+
+
+                <!-- Display existing comments -->
+                <div class="comments">
+                    <?php
+                    // Fetch comments for the current section
+                    $section_id = $section['id'];
+                    // Povezivanje s bazom podataka
+            $servername = "localhost";
+            $username = "root";
+            $password = "";
+            $dbname = "cv_data";
+
+            // Kreiranje veze
+            $conn = new mysqli($servername, $username, $password, $dbname);
+
+            // Provjera veze
+            if ($conn->connect_error) {
+                die("Connection failed: " . $conn->connect_error);
+            }
+                    $comments = $conn->query("SELECT * FROM section_comments WHERE section_id = $section_id ORDER BY created_at DESC");
+
+                    while ($comment = $comments->fetch_assoc()): ?>
+                        <div class="comment">
+                            <p><?php echo htmlspecialchars($comment['comment_text']); ?></p>
+                            <small>Posted on: <?php echo $comment['created_at']; ?></small>
+                        </div>
+                    <?php endwhile; ?>
+                </div>
+
+                <!-- Comment form -->
+                <?php if (isset($_SESSION['user_id'])): ?>
+                    <div class="comment-form">
+                        <textarea id="commentText<?php echo $section['id']; ?>" placeholder="Ostavi svoj komentar.."></textarea>
+                        <button onclick="submitComment(<?php echo $section['id']; ?>)">Send</button>
+                    </div>
+                <?php endif; ?>
+
+            <?php endforeach; 
+            $conn->close();?>
         </div>
+
 
         <!-- Add Section button -->
         <?php if ($isAdmin): ?>
@@ -125,6 +164,44 @@ $conn->close();
 </body>
 
 <script>
+    function submitComment(sectionId) {
+    const commentText = document.getElementById(`commentText${sectionId}`).value;
+    
+    if (commentText.trim() === '') {
+        alert('Comment cannot be empty!');
+        return;
+    }
+
+    fetch('process_comments.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: new URLSearchParams({
+            section_id: sectionId,
+            comment_text: commentText,
+        }),
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Add new comment to the comments section
+            const commentsDiv = document.querySelector(`[data-id='${sectionId}'] .comments`);
+            const newComment = document.createElement('div');
+            newComment.className = 'comment';
+            newComment.innerHTML = `<p>${data.comment_text}</p><small>Posted on: ${data.created_at}</small>`;
+            commentsDiv.insertBefore(newComment, commentsDiv.firstChild);
+
+            // Clear the comment box after submitting
+            document.getElementById(`commentText${sectionId}`).value = '';
+        } else {
+            alert(data.message);
+        }
+    })
+    .catch(error => console.error('Error:', error));
+}
+
+
     function showResumeContent(id) {
     const allSections = document.querySelectorAll('.cvSection');
 
@@ -265,6 +342,79 @@ function addNewSection() {
 </script>
 
 <style>
+
+/* Limit characters per line and restrict the height of the comments section */
+.comment p {
+    margin-top: 15px; /* Add space above each comment */
+    white-space: pre-wrap; /* Preserve whitespace and wrap text */
+    word-wrap: break-word; /* Break words when necessary */
+    overflow: hidden; /* Hide overflowing content */
+    text-overflow: ellipsis; /* Indicate overflow with ellipsis */
+    width: 480px; /* You can set this to whatever width you prefer */
+    /*boje iz drugog filea*/
+    background: #535353;
+    border: 1px solid #666;
+    border-radius: 1px;
+    color: #FFE500;
+}
+
+.comments {
+    max-height: 8em; /* Limit height to 5 lines of text */
+    overflow-y: auto; /* Add vertical scroll if content overflows */
+    color: #FFE500;
+}
+/* Style for comment submit buttons */
+.comment-form{
+    margin-bottom: 30px;
+}
+.comment-form button {
+  height: 46px; /* same height as textboxes */
+  max-width: 200px; /* max width for larger screens */
+  width: 80px; /* min width for smaller screens */
+  vertical-align: top; /* align buttons vertically with textboxes */
+  margin-left: 10px; /* keep the margin for spacing */
+  margin-top: 10px;
+  background: #008D00;
+}
+
+/* Responsive design for textboxes */
+.comment-form textarea {
+    width: 400px;
+    max-width: 500px; /* max width for larger screens */
+    min-width: 50px; /* min width for smaller screens */
+    resize: none;
+    height: 40px; /* match the height of the buttons */
+    margin-top: 10px;
+    /*boje iz drugog filea*/
+    background: #535353;
+    border: 1px solid #666;
+    border-radius: 5px;
+    color: #FFE500;
+    /*stil za placeholder*/
+    font-weight: bold;
+    font-size: large;
+    font-stretch: extra-expanded;
+}
+
+@media (max-width: 768px) {
+    .comment-form textarea {
+        width: 150px;
+        resize: none;
+    height: 40px; /* match the height of the buttons */
+    margin-top: 10px;
+    /*boje iz drugog filea*/
+    background: #535353;
+    border: 1px solid #666;
+    border-radius: 1px;
+    color: #FFE500;
+    /*stil za placeholder*/
+    font-weight: bold;
+    font-size: large;
+    font-stretch: extra-expanded;
+    }
+}
+
+
 .google-map {
     height: 400px;
     width: 75%;
