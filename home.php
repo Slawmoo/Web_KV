@@ -1,7 +1,6 @@
 <?php
 session_start();
 $user_name = isset($_SESSION['user_name']) ? $_SESSION['user_name'] : 'Guest';
-// Fix the isAdmin check to use proper isset()
 $isAdmin = isset($_SESSION['isAdmin']) ? $_SESSION['isAdmin'] != 0 : 0;
 
 // Povezivanje s bazom podataka
@@ -10,28 +9,20 @@ $username = "root";
 $password = "";
 $dbname = "cv_data";
 
-// Kreiranje veze
 $conn = new mysqli($servername, $username, $password, $dbname);
-
-// Provjera veze
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Fetch CV sections
+// Dohvati sekcije
 $sql = "SELECT id, section_title, section_content FROM home_content";
 $result = $conn->query($sql);
-
 $sections = [];
-
 if ($result->num_rows > 0) {
     while ($row = $result->fetch_assoc()) {
-        $sections[] = $row; // Store each section as an array
+        $sections[] = $row;
     }
 }
-
-// Zatvaranje veze tek kad se commentari učitaju
-$conn->close();
 ?>
 
 <!DOCTYPE html>
@@ -40,119 +31,81 @@ $conn->close();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="generalDecor.css">
-    <script src="generalScripts.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-    <!--<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBLJqZBP_SJe1R-8aLmhqu7PMZiKH_UB3w&callback=initMap" async defer></script>-->
-
+    <script src="generalScripts.js"></script>
     <title>HOME</title>
 </head>
-
+<body>
     <?php include 'sidebar.php'; ?>
-
     <div id="headerWrapper">
-    <header>
-        <h1 id="mainTitle">Marko's Journey</h1>
-        <h2 id="welcome-text">Welcome <?php echo htmlspecialchars($user_name); ?> !</h2>
-        <h2 id="menuIcon" onclick="toggleNav()">&#9776;</h2>
-    </header>
-    <div id="CV_container">
-        <div id="CV_list">
-            <?php
-            // Povezivanje s bazom podataka
-            $servername = "localhost";
-            $username = "root";
-            $password = "";
-            $dbname = "cv_data";
-
-            // Kreiranje veze
-            $conn = new mysqli($servername, $username, $password, $dbname);
-
-            // Provjera veze
-            if ($conn->connect_error) {
-                die("Connection failed: " . $conn->connect_error);
-            }?>
-
+        <header>
+            <h1 id="mainTitle">Marko's Journey</h1>
+            <h2 id="welcome-text">Welcome <?php echo htmlspecialchars($user_name);?> !</h2>
+            <h2 id="menuIcon" onclick="toggleNav()">☰</h2>
+        </header>
+        <div id="CV_container">
+            <div id="CV_list">
             <?php foreach ($sections as $section): ?>
                 <div class="cvSection" data-id="<?php echo $section['id']; ?>" onclick="showResumeContent(<?php echo $section['id']; ?>)">
                     <div class="sectionText"><?php echo htmlspecialchars($section['section_title']); ?></div>
-                    <div id="resumeContent<?php echo $section['id']; ?>" class="resumeContent">
+                    <div id="resumeContent<?php echo $section['id']; ?>" class="resumeContent" style="display:none;">
                         <p><?php echo htmlspecialchars($section['section_content']); ?></p>
-    
                     </div>
                 </div>
-                <?php if ($isAdmin): ?>
-                    <!-- Admin buttons -->
-                    <div class="admin-buttons">
-                        <button id="editButton<?php echo $section['id']; ?>" onclick="editContent(<?php echo $section['id']; ?>)">Edit Content</button>
-                        <button style="display:none;" id="saveButton<?php echo $section['id']; ?>" onclick="saveContent(<?php echo $section['id']; ?>)">Save Changes</button>
-                        <button style="display:none;" id="cancelButton<?php echo $section['id']; ?>" onclick="cancelEdit(<?php echo $section['id']; ?>)">Cancel Edit</button>
+
+                <!-- Gumb "Komentiraj" -->
+                <button class="toggle-comments" onclick="toggleComments(<?php echo $section['id']; ?>)">Komentiraj</button>
+
+                <!-- Dio za komentare i formu -->
+                <div class="comment-section" id="commentSection<?php echo $section['id']; ?>" style="display:none;">
+                    <!-- Prikaz postojećih komentara -->
+                    <div class="comments" id="comments<?php echo $section['id']; ?>">
+                        <?php
+                        $section_id = $section['id'];
+                        $comments = $conn->query("SELECT section_comments.*, users.user_name 
+                                                FROM section_comments 
+                                                JOIN users ON section_comments.user_id = users.id 
+                                                WHERE section_id = $section_id 
+                                                ORDER BY created_at DESC");
+                        while ($comment = $comments->fetch_assoc()): 
+                            $formatted_date = date('H:i:s d.m.Y.', strtotime($comment['created_at']));
+                        ?>
+                            <div class="comment" data-comment-id="<?php echo $comment['id']; ?>">
+                                <p><?php echo htmlspecialchars($comment['comment_text']); ?></p>
+                                <small><?php echo htmlspecialchars($comment['user_name']); ?> posted on: <?php echo $formatted_date; ?></small>
+                            </div>
+                        <?php endwhile; ?>
                     </div>
 
-                    <!-- Editable fields (initially hidden) -->
-                    <div class="editFields" id="editFields<?php echo $section['id']; ?>" style="display:none;">
-                        <input type="text" id="editTitle<?php echo $section['id']; ?>" value="<?php echo htmlspecialchars($section['section_title']); ?>" />
-                        <br><br>
-                        <textarea id="editContent<?php echo $section['id']; ?>"><?php echo htmlspecialchars($section['section_content']); ?></textarea>
-                    </div>
-                <?php endif; ?>
-
-                <!-- Display existing comments -->
-                <div class="comments">
-                    <?php
-                    // Fetch comments for the current section
-                    $section_id = $section['id'];
-                    
-                    $comments = $conn->query("SELECT section_comments.*, users.user_name 
-                                          FROM section_comments 
-                                          JOIN users ON section_comments.user_id = users.id 
-                                          WHERE section_id = $section_id 
-                                          ORDER BY created_at DESC");
-
-                while ($comment = $comments->fetch_assoc()): ?>
-                    <div class="comment">
-                        <p><?php echo htmlspecialchars($comment['comment_text']); ?></p>
-                        <small><?php echo htmlspecialchars($comment['user_name']); ?> posted on: <?php echo $comment['created_at']; ?></small>
-                    </div>
-                <?php endwhile; ?>
+                    <!-- Forma za komentare -->
+                    <?php if (isset($_SESSION['user_id'])): ?>
+                        <div class="comment-form">
+                            <textarea id="commentText<?php echo $section['id']; ?>" placeholder="Ostavi svoj komentar.."></textarea>
+                            <button onclick="submitComment(<?php echo $section['id']; ?>)">Send</button>
+                        </div>
+                    <?php endif; ?>
                 </div>
-
-                <!-- Comment form -->
-                <?php if (isset($_SESSION['user_id'])): ?>
-                    <div class="comment-form">
-                        <textarea id="commentText<?php echo $section['id']; ?>" placeholder="Ostavi svoj komentar.."></textarea>
-                        <button onclick="submitComment(<?php echo $section['id']; ?>)">Send</button>
-                    </div>
-                <?php endif; ?>
-
-            <?php endforeach; 
-            $conn->close();?>
+            <?php endforeach; ?>
+            </div>
         </div>
-
-
-        <!-- Add Section button -->
-        <?php if ($isAdmin): ?>
-            <div class="add-section-button" id="add-section-button">
-                <button onclick="showAddSectionForm()">Add Section +</button>
-            </div>
-
-            <!-- Add Section Form (Initially hidden) -->
-            <div class="editFields" id="addSectionForm" style="display:none;">
-                <input type="text" id="newSectionTitle" placeholder="Enter new section title" />
-                <br><br>
-                <textarea id="newSectionContent" placeholder="Enter new section content"></textarea>
-                <br>
-                <button onclick="addNewSection()">Add New Section</button>
-                <button onclick="cancelAddSection()">Cancel</button>
-            </div>
-        <?php endif; ?>
     </div>
+</body>
+</html>
+<?php $conn->close(); ?>
 
 <div id="map" class="google-map"></div>
 
 
-
-
 <script>
+
+function toggleComments(sectionId) {
+    const commentSection = document.getElementById(`commentSection${sectionId}`);
+    if (commentSection.style.display === 'none' || commentSection.style.display === '') {
+        commentSection.style.display = 'block';
+    } else {
+        commentSection.style.display = 'none';
+    }
+}
 /*function initMap() {
         const osijek = { lat: 45.5515, lng: 18.7055 };
         const map = new google.maps.Map(document.getElementById("map"), {
@@ -168,71 +121,39 @@ $conn->close();
     }
 */
 function submitComment(sectionId) {
-    const commentText = document.getElementById(`commentText${sectionId}`).value;
-    // Clear the comment box after submitting
-    document.getElementById(`commentText${sectionId}`).value = '';
-
-    if (commentText.trim() === '') {
-        alert('Comment cannot be empty!');
-        return;
-    }
-
-    fetch('process_comments.php', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: new URLSearchParams({
-            section_id: sectionId,
-            comment_text: commentText,
-        }),
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log('Response data:', data);
-        if (data.success) {
-            // Add new comment to the comments section
-            const commentsDiv = document.querySelector(`[data-id='${sectionId}'] .comments`);
-            const newComment = document.createElement('div');
-            newComment.className = 'comment';
-            newComment.innerHTML = `<p>${data.comment_text}</p><small>posted on: ${data.created_at}</small>`;
-            commentsDiv.insertBefore(newComment, commentsDiv.firstChild);
-
-            // Clear the comment box after submitting
-            document.getElementById(`commentText${sectionId}`).value = '';
-        } else {
-            alert(data.message);
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-    });
-}
-
-
-function showResumeContent(id) {
-    const allSections = document.querySelectorAll('.cvSection');
-
-    allSections.forEach((section) => {
-        const contentElement = section.querySelector('.resumeContent');
-
-        // Check if the current section matches the clicked one
-        if (section.contains(document.getElementById('resumeContent' + id))) {
-            // Toggle display for clicked section
-            if (contentElement.style.display === 'block') {
-                contentElement.style.display = 'none';
-                section.classList.remove('active');
-            } else {
-                contentElement.style.display = 'block';
-                section.classList.add('active');
+            const commentText = document.getElementById(`commentText${sectionId}`).value;
+            
+            if (commentText.trim() === '') {
+                alert('Komentar ne može biti prazan!');
+                return;
             }
-        } else {
-            // Hide others
-            contentElement.style.display = 'none';
-            section.classList.remove('active');
+
+            fetch('process_comments.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: new URLSearchParams({
+                    section_id: sectionId,
+                    comment_text: commentText,
+                }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const commentsDiv = document.getElementById(`comments${sectionId}`);
+                    if (commentsDiv) {
+                        commentsDiv.innerHTML = data.comments_html;
+                    }
+                    document.getElementById(`commentText${sectionId}`).value = '';
+                } else {
+                    alert(data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Greška:', error);
+            });
         }
-    });
-}
 
 function editContent(index) {
     // Show input fields for editing
@@ -291,6 +212,14 @@ function saveContent(id) {
     });
 }
 
+function showResumeContent(id) {
+    const contentDiv = document.getElementById(`resumeContent${id}`);
+    if (contentDiv.style.display === 'none' || contentDiv.style.display === '') {
+        contentDiv.style.display = 'block';
+    } else {
+        contentDiv.style.display = 'none';
+    }
+}
 
 //NEW SECTION
 function showAddSectionForm() {
@@ -350,7 +279,17 @@ function addNewSection() {
 </script>
 
 <style>
+.comment-section {
+    display: none; /* Inicijalno skriveno */
+    margin-top: 10px;
+}
 
+.comments { margin-top: 10px; }
+        .comment { border-bottom: 1px solid #ccc; padding: 5px 0; }
+        .comment small { font-size: 0.8em; color: #666; }
+        .comment-form { margin-top: 10px; }
+        .comment-form textarea { width: 100%; height: 60px; }
+        .comment-form button { margin-top: 5px; }
 /* Limit characters per line and restrict the height of the comments section */
 .comment p {
     margin-top: 15px; /* Add space above each comment */
@@ -511,9 +450,15 @@ button {
   font-weight: bold;
   text-align: center;
 }
+.resumeContent p {
+    font-size: 16px; /* Prilagodite ovu vrijednost prema potrebi, npr. 14px ili 18px */
+    line-height: 1.5; /* Povećava razmak između redova za bolju čitljivost */
+}
 
 .resumeContent {
   display: none;
+  overflow-y: auto; /* Omogućuje vertikalni scrollbar ako sadržaj premaši maksimalnu visinu */
+  box-sizing: border-box; /* Osigurava da padding ne povećava ukupnu veličinu elementa */
   max-width: 85%;
   margin: 20px auto;
   padding: 30px;
@@ -521,7 +466,7 @@ button {
   color: #FFFFFF;
   border-radius: 10px;
   overflow: hidden;
-  max-height: 0; /* Početno skriveno */
+  max-height: 400px; /* Početno skriveno */
   transition: max-height 0.5s ease-out, padding 0.5s ease-out; /* Animacija za prikaz sadržaja */
 }
 
