@@ -54,17 +54,25 @@ if ($result->num_rows > 0) {
                 </div>
 
                 <!-- Admin buttons -->
+
                 <?php if ($isAdmin): ?>
+                    <!-- Admin buttons -->
                     <div class="admin-buttons">
-                        <button id="editButton<?php echo $section['id']; ?>" onclick="editContent(<?php echo $section['id']; ?>)">Edit</button>
-                        <div id="editFields<?php echo $section['id']; ?>" class="editFields" style="display:none;">
-                            <input type="text" id="editTitle<?php echo $section['id']; ?>" value="<?php echo htmlspecialchars($section['section_title']); ?>">
-                            <textarea id="editContent<?php echo $section['id']; ?>"><?php echo htmlspecialchars($section['section_content']); ?></textarea>
-                        </div><br>
-                        <button id="saveButton<?php echo $section['id']; ?>" style="display:none;" onclick="saveContent(<?php echo $section['id']; ?>)">Save</button>
-                        <button id="cancelButton<?php echo $section['id']; ?>" style="display:none;" onclick="cancelEdit(<?php echo $section['id']; ?>)">Cancel</button>
+                        <button id="editButton<?php echo $section['id']; ?>" onclick="editContent(<?php echo $section['id']; ?>)">Edit Content</button>
+                        <button style="display:none;" id="saveButton<?php echo $section['id']; ?>" onclick="saveContent(<?php echo $section['id']; ?>)">Save Changes</button>
+                        <button style="display:none;" id="cancelButton<?php echo $section['id']; ?>" onclick="cancelEdit(<?php echo $section['id']; ?>)">Cancel Edit</button>
+                    </div>
+
+                    <!-- Editable fields (initially hidden) -->
+                    <div class="editFields" id="editFields<?php echo $section['id']; ?>" style="display:none;">
+                        <input type="text" id="editTitle<?php echo $section['id']; ?>" value="<?php echo htmlspecialchars($section['section_title']); ?>" />
+                        <br><br>
+                        <textarea id="editContent<?php echo $section['id']; ?>"><?php echo htmlspecialchars($section['section_content']); ?></textarea>
                     </div>
                 <?php endif; ?>
+                
+                
+
                 <!-- Gumb "Komentiraj" -->
                 <button class="toggle-comments" onclick="toggleComments(<?php echo $section['id']; ?>)">Komentiraj</button>
 
@@ -98,6 +106,23 @@ if ($result->num_rows > 0) {
                     <?php endif; ?>
                 </div>
             <?php endforeach; ?>
+
+            <!-- Add Section button -->
+            <?php if ($isAdmin): ?>
+                    <div class="add-section-button" id="add-section-button">
+                        <button onclick="showAddSectionForm()">Add Section +</button>
+                    </div>
+
+                    <!-- Add Section Form (Initially hidden) -->
+                    <div class="editFields" id="addSectionForm" style="display:none;">
+                        <input type="text" id="newSectionTitle" placeholder="Enter new section title" />
+                        <br><br>
+                        <textarea id="newSectionContent" placeholder="Enter new section content"></textarea>
+                        <br>
+                        <button onclick="addNewSection()">Add New Section</button>
+                        <button onclick="cancelAddSection()">Cancel</button>
+                    </div>
+                <?php endif; ?>
             </div>
         </div>
     </div>
