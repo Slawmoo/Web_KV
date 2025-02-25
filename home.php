@@ -1,23 +1,31 @@
 <?php
+// Start the session to track user data across pages
 session_start();
+
+// Set user_name from session, default to 'Guest' if not set
 $user_name = isset($_SESSION['user_name']) ? $_SESSION['user_name'] : 'Guest';
+
+// Check if user is admin (non-zero value), default to 0 (not admin) if not set
 $isAdmin = isset($_SESSION['isAdmin']) ? $_SESSION['isAdmin'] != 0 : 0;
 
-// Povezivanje s bazom podataka
+// Database connection setup
 $servername = "localhost";
 $username = "root";
 $password = "";
 $dbname = "cv_data";
 
+// Create connection to MySQL database
 $conn = new mysqli($servername, $username, $password, $dbname);
+// Check if connection failed and terminate script with error message if so
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Dohvati sekcije
+// Query to fetch sections from home_content table
 $sql = "SELECT id, section_title, section_content FROM home_content";
 $result = $conn->query($sql);
 $sections = [];
+// If there are results, loop through and store them in $sections array
 if ($result->num_rows > 0) {
     while ($row = $result->fetch_assoc()) {
         $sections[] = $row;
@@ -28,24 +36,30 @@ if ($result->num_rows > 0) {
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- Basic HTML metadata for character encoding and responsive viewport -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- External CSS and JS files for styling and functionality -->
     <link rel="stylesheet" href="generalDecor.css">
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script src="generalScripts.js"></script>
     <title>HOME</title>
 </head>
 <body>
+    <!-- Include sidebar navigation from external file -->
     <?php include 'sidebar.php'; ?>
     <div id="headerWrapper">
         <header>
+            <!-- Main page title and welcome message with user name -->
             <h1 id="mainTitle">Marko's Journey</h1>
             <h2 id="welcome-text">Welcome <?php echo htmlspecialchars($user_name);?> !</h2>
             <h2 id="menuIcon" onclick="toggleNav()">☰</h2>
         </header>
         <div id="CV_container">
             <div id="CV_list">
+            <!-- Loop through sections to display them -->
             <?php foreach ($sections as $section): ?>
+                <!-- Clickable section with title and hidden content -->
                 <div class="cvSection" data-id="<?php echo $section['id']; ?>" onclick="showResumeContent(<?php echo $section['id']; ?>)">
                     <div class="sectionText"><?php echo htmlspecialchars($section['section_title']); ?></div>
                     <div id="resumeContent<?php echo $section['id']; ?>" class="resumeContent" style="display:none;">
@@ -53,17 +67,16 @@ if ($result->num_rows > 0) {
                     </div>
                 </div>
 
-                <!-- Admin buttons -->
-
+                <!-- Admin-only editing controls -->
                 <?php if ($isAdmin): ?>
-                    <!-- Admin buttons -->
                     <div class="admin-buttons">
+                        <!-- Buttons for editing section content -->
                         <button id="editButton<?php echo $section['id']; ?>" onclick="editContent(<?php echo $section['id']; ?>)">Edit Content</button>
                         <button style="display:none;" id="saveButton<?php echo $section['id']; ?>" onclick="saveContent(<?php echo $section['id']; ?>)">Save Changes</button>
                         <button style="display:none;" id="cancelButton<?php echo $section['id']; ?>" onclick="cancelEdit(<?php echo $section['id']; ?>)">Cancel Edit</button>
                     </div>
 
-                    <!-- Editable fields (initially hidden) -->
+                    <!-- Hidden fields for editing title and content -->
                     <div class="editFields" id="editFields<?php echo $section['id']; ?>" style="display:none;">
                         <input type="text" id="editTitle<?php echo $section['id']; ?>" value="<?php echo htmlspecialchars($section['section_title']); ?>" />
                         <br><br>
@@ -71,17 +84,16 @@ if ($result->num_rows > 0) {
                     </div>
                 <?php endif; ?>
                 
-                
-
-                <!-- Gumb "Komentiraj" -->
+                <!-- Comment toggle button -->
                 <button class="toggle-comments" onclick="toggleComments(<?php echo $section['id']; ?>)">Komentiraj</button>
 
-                <!-- Dio za komentare i formu -->
+                <!-- Comment section (hidden by default) -->
                 <div class="comment-section" id="commentSection<?php echo $section['id']; ?>" style="display:none;">
-                    <!-- Prikaz postojećih komentara -->
+                    <!-- Display existing comments -->
                     <div class="comments" id="comments<?php echo $section['id']; ?>">
                         <?php
                         $section_id = $section['id'];
+                        // Query to fetch comments for this section with user info
                         $comments = $conn->query("SELECT section_comments.*, users.user_name 
                                                 FROM section_comments 
                                                 JOIN users ON section_comments.user_id = users.id 
@@ -97,7 +109,7 @@ if ($result->num_rows > 0) {
                         <?php endwhile; ?>
                     </div>
 
-                    <!-- Forma za komentare -->
+                    <!-- Comment form for logged-in users -->
                     <?php if (isset($_SESSION['user_id'])): ?>
                         <div class="comment-form">
                             <textarea id="commentText<?php echo $section['id']; ?>" placeholder="Ostavi svoj komentar.."></textarea>
@@ -107,41 +119,46 @@ if ($result->num_rows > 0) {
                 </div>
             <?php endforeach; ?>
 
-            <!-- Add Section button -->
+            <!-- Admin-only button to add new section -->
             <?php if ($isAdmin): ?>
-                    <div class="add-section-button" id="add-section-button">
-                        <button onclick="showAddSectionForm()">Add Section +</button>
-                    </div>
+                <div class="add-section-button" id="add-section-button">
+                    <button onclick="showAddSectionForm()">Add Section +</button>
+                </div>
 
-                    <!-- Add Section Form (Initially hidden) -->
-                    <div class="editFields" id="addSectionForm" style="display:none;">
-                        <input type="text" id="newSectionTitle" placeholder="Enter new section title" />
-                        <br><br>
-                        <textarea id="newSectionContent" placeholder="Enter new section content"></textarea>
-                        <br>
-                        <button onclick="addNewSection()">Add New Section</button>
-                        <button onclick="cancelAddSection()">Cancel</button>
-                    </div>
-                <?php endif; ?>
+                <!-- Hidden form for adding new section -->
+                <div class="editFields" id="addSectionForm" style="display:none;">
+                    <input type="text" id="newSectionTitle" placeholder="Enter new section title" />
+                    <br><br>
+                    <textarea id="newSectionContent" placeholder="Enter new section content"></textarea>
+                    <br>
+                    <button onclick="addNewSection()">Add New Section</button>
+                    <button onclick="cancelAddSection()">Cancel</button>
+                </div>
+            <?php endif; ?>
             </div>
         </div>
     </div>
 </body>
 </html>
-<?php $conn->close(); ?>
+<?php 
+// Close the database connection
+$conn->close(); 
+?>
 
-<!-- API implementacija -->
-
+<!-- Google Maps API implementation -->
 <div id="map"></div>
 
-    <!-- JavaScript to initialize the map -->
+    <!-- JavaScript to initialize Google Map -->
     <script>
         function initMap() {
+            // Set coordinates for Osijek
             const osijek = { lat: 45.5511, lng: 18.6939 };
+            // Create map centered on Osijek with zoom level 12
             const map = new google.maps.Map(document.getElementById('map'), {
-            center: osijek,
-            zoom: 12
-        });
+                center: osijek,
+                zoom: 12
+            });
+            // Add marker at Osijek location
             const marker = new google_maps_marker_AdvancedMarkerElement({
                 position: osijek,
                 map: map,
@@ -150,19 +167,20 @@ if ($result->num_rows > 0) {
         }
     </script>
 
-    <!-- Google Maps API script with your API key AIzaSyCqHQZnOHQh4wjBrtXI7Q5sRbIOePEI5-g-->
+    <!-- Load Google Maps API asynchronously with API key -->
     <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCqHQZnOHQh4wjBrtXI7Q5sRbIOePEI5-g&callback=initMap"></script>    
     <style>
         #map {
-            height: 300px;  /* Set the height of the map */
-            width: 80%;     /* Set the width of the map */
-            margin: 0 auto; /* Center the map horizontally */
-            margin-bottom: 15px;
+            height: 300px;  /* Map height */
+            width: 80%;     /* Map width */
+            margin: 0 auto; /* Center map horizontally */
+            margin-bottom: 15px; /* Space below map */
         }
     </style>
 
+<!-- JavaScript functions for interactivity -->
 <script>
-
+// Toggle visibility of comment section for a given section
 function toggleComments(sectionId) {
     const commentSection = document.getElementById(`commentSection${sectionId}`);
     if (commentSection.style.display === 'none' || commentSection.style.display === '') {
@@ -172,66 +190,65 @@ function toggleComments(sectionId) {
     }
 }
 
+// Submit a new comment via AJAX
 function submitComment(sectionId) {
-            const commentText = document.getElementById(`commentText${sectionId}`).value;
-            
-            if (commentText.trim() === '') {
-                alert('Komentar ne može biti prazan!');
-                return;
+    const commentText = document.getElementById(`commentText${sectionId}`).value;
+    
+    // Validate comment isn't empty
+    if (commentText.trim() === '') {
+        alert('Komentar ne može biti prazan!');
+        return;
+    }
+
+    // Send comment to server via fetch
+    fetch('process_comments.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: new URLSearchParams({
+            section_id: sectionId,
+            comment_text: commentText,
+        }),
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            const commentsDiv = document.getElementById(`comments${sectionId}`);
+            if (commentsDiv) {
+                commentsDiv.innerHTML = data.comments_html; // Update comments display
             }
-
-            fetch('process_comments.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: new URLSearchParams({
-                    section_id: sectionId,
-                    comment_text: commentText,
-                }),
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    const commentsDiv = document.getElementById(`comments${sectionId}`);
-                    if (commentsDiv) {
-                        commentsDiv.innerHTML = data.comments_html;
-                    }
-                    document.getElementById(`commentText${sectionId}`).value = '';
-                } else {
-                    alert(data.message);
-                }
-            })
-            .catch(error => {
-                console.error('Greška:', error);
-            });
+            document.getElementById(`commentText${sectionId}`).value = ''; // Clear textarea
+        } else {
+            alert(data.message);
         }
+    })
+    .catch(error => {
+        console.error('Greška:', error);
+    });
+}
 
+// Show edit fields for a section
 function editContent(index) {
-    // Show input fields for editing
     document.getElementById('editFields' + index).style.display = 'block';
     document.getElementById('saveButton' + index).style.display = 'inline-block';
     document.getElementById('cancelButton' + index).style.display = 'inline-block';
-
-    // Hide the edit button
     document.getElementById('editButton' + index).style.display = 'none';
 }
 
+// Cancel editing and hide fields
 function cancelEdit(index) {
-    // Hide the edit fields and buttons
     document.getElementById('editFields' + index).style.display = 'none';
     document.getElementById('saveButton' + index).style.display = 'none';
     document.getElementById('cancelButton' + index).style.display = 'none';
-
-    // Show the edit button
     document.getElementById('editButton' + index).style.display = 'inline-block';
 }
 
+// Save edited content via AJAX
 function saveContent(id) {
     const title = document.getElementById('editTitle' + id).value;
     const content = document.getElementById('editContent' + id).value;
 
-    // Make an AJAX request to update the content using id
     $.ajax({
         url: 'process_homeContent.php',
         type: 'POST',
@@ -243,15 +260,13 @@ function saveContent(id) {
         dataType: 'json',
         success: function(response) {
             if (response.success) {
-                // Hide the edit fields and buttons
+                // Hide edit interface
                 document.getElementById('editFields' + id).style.display = 'none';
                 document.getElementById('saveButton' + id).style.display = 'none';
                 document.getElementById('cancelButton' + id).style.display = 'none';
-
-                // Show the edit button
                 document.getElementById('editButton' + id).style.display = 'inline-block';
 
-                // Update the displayed section title and content dynamically
+                // Update displayed content
                 document.querySelector('.cvSection[data-id="' + id + '"] .sectionText').textContent = title;
                 document.getElementById('resumeContent' + id).querySelector('p').textContent = content;
             } else {
@@ -264,6 +279,7 @@ function saveContent(id) {
     });
 }
 
+// Toggle visibility of resume content
 function showResumeContent(id) {
     const contentDiv = document.getElementById(`resumeContent${id}`);
     if (contentDiv.style.display === 'none' || contentDiv.style.display === '') {
@@ -273,38 +289,37 @@ function showResumeContent(id) {
     }
 }
 
-//NEW SECTION
+// Show form to add new section
 function showAddSectionForm() {
     document.getElementById('addSectionForm').style.display = 'block';
 }
 
+// Hide and reset add section form
 function cancelAddSection() {
     document.getElementById('addSectionForm').style.display = 'none';
 }
 
+// Add new section via AJAX
 function addNewSection() {
     const newTitle = document.getElementById('newSectionTitle').value;
     const newContent = document.getElementById('newSectionContent').value;
 
-    // Check if the fields are not empty
     if (!newTitle || !newContent) {
         alert("Please fill in both the title and content.");
         return;
     }
 
-    // AJAX request to send new section data to the server
     $.ajax({
-        url: 'process_addSection.php',  // This PHP file will handle inserting the new section into the database
+        url: 'process_addSection.php',
         type: 'POST',
         data: {
             section_title: newTitle,
             section_content: newContent
         },
         success: function(response) {
-            // Assuming the response contains the new section's ID
             const newSectionId = response.new_id;
 
-            // Add the new section dynamically to the page
+            // Dynamically add new section to page
             const newSectionHtml = `
                 <div class="cvSection" onclick="showResumeContent(${newSectionId})">
                     <div class="sectionText">${newTitle}</div>
@@ -314,10 +329,9 @@ function addNewSection() {
                 </div>
             `;
             
-            // Append the new section to the CV list
             document.getElementById('CV_list').innerHTML += newSectionHtml;
 
-            // Hide the add section form and reset the fields
+            // Reset and hide form
             document.getElementById('addSectionForm').style.display = 'none';
             document.getElementById('newSectionTitle').value = '';
             document.getElementById('newSectionContent').value = '';
@@ -327,7 +341,6 @@ function addNewSection() {
         }
     });
 }
-
 </script>
 
 <style>

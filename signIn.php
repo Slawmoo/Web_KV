@@ -1,28 +1,39 @@
 <?php
+// Start the session to manage user authentication across pages
 session_start();
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- Basic HTML metadata for character encoding and responsive viewport -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- External CSS and JS files for styling and functionality -->
     <link rel="stylesheet" href="generalDecor.css">
     <script src="generalScripts.js"></script>
+    <!-- Include jQuery library for AJAX functionality -->
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <title>Sign In</title>
 </head>
 
 <body>
+    <!-- Include sidebar navigation from external file -->
     <?php include 'sidebar.php'; ?>
+    <!-- Page header with title -->
     <header>
         <h1>SIGN IN</h1>
     </header>
+    <!-- Menu icon for toggling navigation -->
     <div id="menuIcon">
-        <span onclick="toggleNav()">&#9776; Menu</span>
+        <span onclick="toggleNav()">☰ Menu</span>
     </div>
     
+    <!-- Container for the sign-in form -->
     <div id="singInFormDiv">
+        <!-- Div for displaying error messages, hidden by default -->
         <div id="error-message" style="color: #ff4444; text-align: center; margin: 10px 0; display: none;"></div>
+        <!-- Sign-in form with email and password fields -->
         <form id="signInForm" method="post">
             <label for="email">E-mail</label>
             <input type="email" id="email" name="email" required>
@@ -33,39 +44,48 @@ session_start();
     </div>
 </body>
 
+<!-- JavaScript for handling URL parameters and form submission -->
 <script>
+// Function to retrieve query parameters from the URL
 function getQueryParam(param) {
     let urlParams = new URLSearchParams(window.location.search);
     return urlParams.get(param);
 }
 
+// Execute when the page loads to check for success status
 window.onload = function() {
+    // Show alert if sign-up was successful (from query parameter)
     if (getQueryParam('status') === 'success') {
         alert("Profile successfully created!");
     }
 };
 
+// jQuery document ready function for form handling
 $(document).ready(function() {
+    // Bind submit event to the sign-in form
     $('#signInForm').on('submit', function(e) {
-        e.preventDefault();
+        e.preventDefault(); // Prevent default form submission
 
-        console.log('Form submitted');  // Debugging flag
+        console.log('Form submitted');  // Debugging flag to confirm submission
         
+        // Send form data via AJAX to server
         $.ajax({
             type: 'POST',
-            url: 'process_signIn.php',
-            data: $(this).serialize(),
-            dataType: 'json',
+            url: 'process_signIn.php', // PHP script to handle sign-in logic
+            data: $(this).serialize(), // Serialize form data
+            dataType: 'json', // Expect JSON response
             success: function(response) {
-                console.log('Response received', response);  // Debugging flag
+                console.log('Response received', response);  // Debugging flag for response
                 if (response.success) {
+                    // Redirect to home page on successful sign-in
                     window.location.href = 'home.php';
                 } else {
+                    // Display error message from server response
                     $('#error-message')
                         .text(response.message)
                         .show()
                         .css({
-                            'background-color': 'rgba(255, 68, 68, 0.1)',
+                            'background-color': 'rgba(255, 68, 68, 0.1)', // Light red background
                             'padding': '10px',
                             'border-radius': '4px',
                             'margin-bottom': '20px'
@@ -73,6 +93,7 @@ $(document).ready(function() {
                 }
             },
             error: function(jqXHR, textStatus, errorThrown) {
+                // Handle AJAX errors (e.g., network issues)
                 console.error('Error occurred: ', textStatus, errorThrown);  // Debugging flag
                 $('#error-message')
                     .text('An error occurred. Please try again.')

@@ -1,36 +1,49 @@
 <?php
-session_start();?>
+// Start the session to access and manage user session data
+session_start();
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- Basic HTML metadata for character encoding and responsive viewport -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- External CSS and JS files for styling and functionality -->
     <link rel="stylesheet" href="generalDecor.css">
     <script src="generalScripts.js"></script>
     <title>Sign Out</title>
 </head>
 <body>
+    <!-- Include sidebar navigation from external file -->
     <?php include 'sidebar.php'; ?>
 
+    <!-- Page header with confirmation message -->
     <header>
         <h1>Do you really want to sign out?</h1>
     </header>
+    <!-- Menu icon for toggling navigation -->
     <div id="menuIcon">
-        <span onclick="toggleNav()">&#9776; Menu</span>
+        <span onclick="toggleNav()">☰ Menu</span>
     </div>
+    <!-- Centered content with sign-out form -->
     <div id="centarContent">
+        <!-- Form to submit sign-out request to server -->
         <form action="process_signOut.php" method="post">
             <button type="submit" class="sign-out-button">Sign Out</button>
         </form>
     </div>
 </body>
 
+<!-- JavaScript for client-side sign-out handling -->
 <script>
+    // Function to handle sign-out (currently just an alert)
     function signOut() {
-    // Add your sign-out logic here
-    alert('You have been signed out.');
-    // Redirect to sign-in page or perform any other necessary actions
-}
+        // Display confirmation of sign-out (placeholder logic)
+        alert('You have been signed out.');
+        // Note: Actual redirection or session clearing should be handled server-side in process_signOut.php
+        // Add redirection here if needed, e.g., window.location.href = 'signIn.php';
+    }
 </script>
 
 <style>
