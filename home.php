@@ -53,6 +53,18 @@ if ($result->num_rows > 0) {
                     </div>
                 </div>
 
+                <!-- Admin buttons -->
+                <?php if ($isAdmin): ?>
+                    <div class="admin-buttons">
+                        <button id="editButton<?php echo $section['id']; ?>" onclick="editContent(<?php echo $section['id']; ?>)">Edit</button>
+                        <div id="editFields<?php echo $section['id']; ?>" class="editFields" style="display:none;">
+                            <input type="text" id="editTitle<?php echo $section['id']; ?>" value="<?php echo htmlspecialchars($section['section_title']); ?>">
+                            <textarea id="editContent<?php echo $section['id']; ?>"><?php echo htmlspecialchars($section['section_content']); ?></textarea>
+                        </div><br>
+                        <button id="saveButton<?php echo $section['id']; ?>" style="display:none;" onclick="saveContent(<?php echo $section['id']; ?>)">Save</button>
+                        <button id="cancelButton<?php echo $section['id']; ?>" style="display:none;" onclick="cancelEdit(<?php echo $section['id']; ?>)">Cancel</button>
+                    </div>
+                <?php endif; ?>
                 <!-- Gumb "Komentiraj" -->
                 <button class="toggle-comments" onclick="toggleComments(<?php echo $section['id']; ?>)">Komentiraj</button>
 
@@ -93,8 +105,36 @@ if ($result->num_rows > 0) {
 </html>
 <?php $conn->close(); ?>
 
-<div id="map" class="google-map"></div>
+<!-- API implementacija -->
 
+<div id="map"></div>
+
+    <!-- JavaScript to initialize the map -->
+    <script>
+        function initMap() {
+            const osijek = { lat: 45.5511, lng: 18.6939 };
+            const map = new google.maps.Map(document.getElementById('map'), {
+            center: osijek,
+            zoom: 12
+        });
+            const marker = new google_maps_marker_AdvancedMarkerElement({
+                position: osijek,
+                map: map,
+                title: 'Osijek'
+            });
+        }
+    </script>
+
+    <!-- Google Maps API script with your API key AIzaSyCqHQZnOHQh4wjBrtXI7Q5sRbIOePEI5-g-->
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCqHQZnOHQh4wjBrtXI7Q5sRbIOePEI5-g&callback=initMap"></script>    
+    <style>
+        #map {
+            height: 300px;  /* Set the height of the map */
+            width: 80%;     /* Set the width of the map */
+            margin: 0 auto; /* Center the map horizontally */
+            margin-bottom: 15px;
+        }
+    </style>
 
 <script>
 
@@ -106,20 +146,7 @@ function toggleComments(sectionId) {
         commentSection.style.display = 'none';
     }
 }
-/*function initMap() {
-        const osijek = { lat: 45.5515, lng: 18.7055 };
-        const map = new google.maps.Map(document.getElementById("map"), {
-            zoom: 12,
-            center: osijek,
-        });
 
-        const marker = new google.maps.Marker({
-            position: osijek,
-            map: map,
-            title: "Osijek"
-        });
-    }
-*/
 function submitComment(sectionId) {
             const commentText = document.getElementById(`commentText${sectionId}`).value;
             
